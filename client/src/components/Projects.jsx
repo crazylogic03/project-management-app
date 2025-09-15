@@ -7,6 +7,8 @@ import { useTheme } from "../context/ThemeContext";
 
 import InviteModal from "./InviteModal";
 
+const API_URL = import.meta.env.VITE_API_URL || "https://project-management-app-89n4.onrender.com/api";
+
 const Projects = () => {
   const { darkMode } = useTheme();
   const navigate = useNavigate();
@@ -42,7 +44,7 @@ const Projects = () => {
       if (!user) return navigate("/login");
 
       try {
-        const res = await fetch(`https://project-management-app-89n4.onrender.com/api/boards?userId=${user.id}`);
+        const res = await fetch(`${API_URL}/boards?userId=${user.id}`);
         const data = await res.json();
 
         const mapped = data.map((b, index) => ({
@@ -110,7 +112,7 @@ const Projects = () => {
           : "COMPLETED";
 
     try {
-      const res = await fetch("https://project-management-app-89n4.onrender.com/api/boards", {
+      const res = await fetch(`${API_URL}/boards`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -168,7 +170,7 @@ const Projects = () => {
     }
 
     try {
-      const res = await fetch(`https://project-management-app-89n4.onrender.com/api/boards/${projectId}`, {
+      const res = await fetch(`${API_URL}/boards/${projectId}`, {
         method: "DELETE",
       });
 
