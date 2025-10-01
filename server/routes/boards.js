@@ -90,6 +90,7 @@ router.get("/:id", async (req, res) => {
 router.post("/", async (req, res) => {
     try {
         const { title, description, userId, deadline, progress, status, template, organization } = req.body;
+        const { TEMPLATES } = require("../config/templates");
 
         const board = await prisma.board.create({
             data: {
@@ -117,21 +118,38 @@ router.post("/", async (req, res) => {
             }
         });
 
-        // Default lists
-        const defaultLists = [
-            { title: "To Do", order: 1 },
-            { title: "In Progress", order: 2 },
-            { title: "Done", order: 3 },
-        ];
+        // Get template configuration or use default
+        const templateConfig = TEMPLATES[template] || TEMPLATES["Table"];
+        const defaultLists = templateConfig.lists;
 
+        // Create lists based on template
+        const createdLists = {};
         for (const list of defaultLists) {
-            await prisma.list.create({
+            const createdList = await prisma.list.create({
                 data: {
                     title: list.title,
                     order: list.order,
                     boardId: board.id,
                 },
             });
+            createdLists[list.title] = createdList.id;
+        }
+
+        // Create default cards if template has them
+        if (templateConfig.defaultCards && templateConfig.defaultCards.length > 0) {
+            for (const card of templateConfig.defaultCards) {
+                const listId = createdLists[card.listTitle];
+                if (listId) {
+                    await prisma.card.create({
+                        data: {
+                            title: card.title,
+                            description: card.description,
+                            order: card.order,
+                            listId: listId,
+                        },
+                    });
+                }
+            }
         }
 
         const fullBoard = await prisma.board.findUnique({
