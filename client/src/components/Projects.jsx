@@ -219,6 +219,19 @@ const Projects = () => {
           <div className="modal-overlay">
             <div className="modal-box">
               <h2>Create Project</h2>
+              {formData.template && (
+                <div className="template-badge">
+                  <span className="template-icon">
+                    {formData.template === "Todo Template" && "📝"}
+                    {formData.template === "Project Template" && "🚀"}
+                    {formData.template === "Table" && "📊"}
+                    {formData.template === "Agile Sprint" && "⚡"}
+                    {formData.template === "Bug Tracking" && "🐛"}
+                    {formData.template === "Marketing Campaign" && "📢"}
+                  </span>
+                  <span className="template-name">{formData.template}</span>
+                </div>
+              )}
 
               <label>Project Name</label>
               <input
