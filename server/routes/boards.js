@@ -92,6 +92,19 @@ router.post("/", async (req, res) => {
         const { title, description, userId, deadline, progress, status, template, organization } = req.body;
         const { TEMPLATES } = require("../config/templates");
 
+        // Validation
+        if (!title || !userId) {
+            return res.status(400).json({
+                message: "Title and User ID are required"
+            });
+        }
+
+        if (template && !TEMPLATES[template]) {
+            return res.status(400).json({
+                message: `Invalid template: ${template}. Available templates: ${Object.keys(TEMPLATES).join(", ")}`
+            });
+        }
+
         const board = await prisma.board.create({
             data: {
                 title,
@@ -100,7 +113,7 @@ router.post("/", async (req, res) => {
                 deadline: deadline ? new Date(deadline) : null,
                 progress: progress ?? 0,
                 status: status || "Not Started",
-                template,
+                template: template || "Table",
                 createdBy: Number(userId),
                 members: {
                     create: { userId: Number(userId), role: "owner" },
@@ -112,7 +125,7 @@ router.post("/", async (req, res) => {
         await prisma.activity.create({
             data: {
                 action: "CREATE_BOARD",
-                message: `Created board "${board.title}"`,
+                message: `Created board "${board.title}" using ${template || "default"} template`,
                 boardId: board.id,
                 userId: Number(userId)
             }
@@ -155,14 +168,29 @@ router.post("/", async (req, res) => {
         const fullBoard = await prisma.board.findUnique({
             where: { id: board.id },
             include: {
-                lists: { include: { cards: true } },
+                lists: {
+                    orderBy: { order: "asc" },
+                    include: { cards: { orderBy: { order: "asc" } } }
+                },
             },
         });
 
         res.status(201).json(fullBoard);
     } catch (err) {
         console.error("Error creating board:", err);
-        res.status(500).json({ message: "Failed to create board" });
+
+        // More specific error messages
+        if (err.code === 'P2002') {
+            return res.status(409).json({ message: "A board with this name already exists" });
+        }
+        if (err.code === 'P2003') {
+            return res.status(400).json({ message: "Invalid user ID" });
+        }
+
+        res.status(500).json({
+            message: "Failed to create board",
+            error: process.env.NODE_ENV === 'development' ? err.message : undefined
+        });
     }
 });
 

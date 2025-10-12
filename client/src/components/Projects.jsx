@@ -101,8 +101,18 @@ const Projects = () => {
     const user = JSON.parse(localStorage.getItem("user"));
     if (!user) return navigate("/login");
 
-    if (!formData.name || !formData.deadline)
-      return alert("Project Name & Deadline required!");
+    // Validation
+    if (!formData.name || !formData.name.trim()) {
+      return alert("Project Name is required!");
+    }
+
+    if (!formData.deadline) {
+      return alert("Deadline is required!");
+    }
+
+    if (!formData.template) {
+      return alert("Please select a template!");
+    }
 
     const mappedStatus =
       formData.status === "Not Started"
@@ -116,7 +126,7 @@ const Projects = () => {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          title: formData.name,
+          title: formData.name.trim(),
           description: formData.description,
           deadline: formData.deadline,
           progress: Number(formData.progress),
@@ -128,7 +138,10 @@ const Projects = () => {
       });
 
       const newBoard = await res.json();
-      if (!res.ok) return alert(newBoard.message || "Failed to create project");
+
+      if (!res.ok) {
+        return alert(newBoard.message || "Failed to create project");
+      }
 
       const index = projects.length % projectColors.length;
       const newColor = projectColors[index];
@@ -157,9 +170,12 @@ const Projects = () => {
         template: "",
         organization: "",
       });
+
+      // Success notification
+      alert(`Project "${newBoard.title}" created successfully!`);
     } catch (err) {
       console.error(err);
-      alert("Failed to create project");
+      alert("Failed to create project. Please try again.");
     }
   };
 
