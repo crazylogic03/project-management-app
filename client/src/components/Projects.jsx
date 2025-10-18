@@ -4,6 +4,7 @@ import "../styles/Projects.css";
 import { CalendarDays, Users, Plus, Trash2 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useTheme } from "../context/ThemeContext";
+import { TEMPLATE_INFO } from "../constants/templates";
 
 import InviteModal from "./InviteModal";
 
@@ -235,17 +236,16 @@ const Projects = () => {
           <div className="modal-overlay">
             <div className="modal-box">
               <h2>Create Project</h2>
-              {formData.template && (
-                <div className="template-badge">
-                  <span className="template-icon">
-                    {formData.template === "Todo Template" && "📝"}
-                    {formData.template === "Project Template" && "🚀"}
-                    {formData.template === "Table" && "📊"}
-                    {formData.template === "Agile Sprint" && "⚡"}
-                    {formData.template === "Bug Tracking" && "🐛"}
-                    {formData.template === "Marketing Campaign" && "📢"}
-                  </span>
-                  <span className="template-name">{formData.template}</span>
+              {formData.template && TEMPLATE_INFO[formData.template] && (
+                <div className="template-info-box">
+                  <div className="template-badge">
+                    <span className="template-icon">{TEMPLATE_INFO[formData.template].icon}</span>
+                    <span className="template-name">{formData.template}</span>
+                  </div>
+                  <p className="template-description">{TEMPLATE_INFO[formData.template].description}</p>
+                  <div className="template-lists">
+                    <strong>Lists:</strong> {TEMPLATE_INFO[formData.template].lists.join(" → ")}
+                  </div>
                 </div>
               )}
 
