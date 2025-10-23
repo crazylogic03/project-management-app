@@ -1,0 +1,106 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+.signin-container {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+}
+
+.signin-left {
+  width: 50%;
+  background-color: #00b9b9; 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.signin-illustration {
+  width: 100%;
+  max-width: 700px;
+  height: auto;
+}
+
+.signin-right {
+  width: 50%;
+  background-color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.signin-title {
+  color: #00b9b9;
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+}
+
+.signin-form {
+  width: 70%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.3rem;
+}
+
+.signin-form label {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #333;
+}
+
+.signin-form input {
+  padding: 14px 20px;
+  border: none;
+  outline: none;
+  border-radius: 30px;
+  background-color: #00b9b9;
+  color: white;
+  font-size: 1rem;
+}
+
+.signin-form input::placeholder {
+  color: white;
+  opacity: 0.9;
+}
+
+.signin-btn {
+  margin-top: 1rem;
+  padding: 14px 0;
+  width: 180px;
+  background-color: #00b9b9;
+  border: none;
+  border-radius: 30px;
+  font-size: 1.2rem;
+  color: rgb(255, 255, 255);
+  cursor: pointer;
+  transition: 0.3s ease;
+  align-self: center;
+}
+
+.signin-btn:hover {
+  background-color: #009d9d;
+}
+
+.signup-text {
+  margin-top: 1.5rem;
+  font-size: 1rem;
+  color: #333;
+}
+
+.signup-text a {
+  color: #00b9b9;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.signup-text a:hover {
+  text-decoration: underline;
+}
