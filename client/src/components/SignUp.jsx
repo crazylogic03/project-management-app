@@ -1,8 +1,17 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import "../styles/SignUp.css";
 import image from "../assets/image1.png"; 
 
 const SignupPage = () => {
+  const navigate = useNavigate();
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // Here you can add signup logic
+    navigate("/dashboard"); // Redirect to dashboard
+  };
+
   return (
     <div className="signup-container">
       <div className="signup-left">
@@ -13,7 +22,7 @@ const SignupPage = () => {
         <h2 className="signup-title">Join Us!</h2>
         <h3 className="signup-subtitle">Stay connected, stay productive, and reach milestones together.</h3>
 
-        <form className="signup-form">
+        <form className="signup-form" onSubmit={handleSubmit}>
           <label>Full Name</label>
           <input type="text" placeholder="Enter your full name" required />
 

@@ -1,8 +1,16 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import "../styles/SignIn.css";
-import image from "../assets/image2.png"; 
+import image from "../assets/image2.png";
 
 const SignInPage = () => {
+  const navigate = useNavigate();
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    navigate("/dashboard");
+  };
+
   return (
     <div className="signin-container">
       <div className="signin-right">
@@ -11,7 +19,7 @@ const SignInPage = () => {
           Take a look at what's happening in your Account
         </h3>
 
-        <form className="signin-form">
+        <form className="signin-form" onSubmit={handleSubmit}>
           <label>Email</label>
           <input type="email" placeholder="Enter your email" required />
 
