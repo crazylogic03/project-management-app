@@ -1,6 +1,6 @@
 import React from "react";
 import "../styles/SignUp.css";
-import image from "../assets/image2.png"; 
+import image from "../assets/image1.png"; 
 
 const SignupPage = () => {
   return (
@@ -11,6 +11,7 @@ const SignupPage = () => {
 
       <div className="signup-right">
         <h2 className="signup-title">Join Us!</h2>
+        <h3 className="signup-subtitle">Stay connected, stay productive, and reach milestones together.</h3>
 
         <form className="signup-form">
           <label>Full Name</label>

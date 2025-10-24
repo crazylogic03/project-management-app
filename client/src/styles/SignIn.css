@@ -11,7 +11,7 @@
   display: flex;
   height: 100vh;
   width: 100vw;
-  overflow: hidden;
+  /* overflow: hidden; */
 }
 
 .signin-left {
@@ -40,7 +40,13 @@
 .signin-title {
   color: #00b9b9;
   font-size: 2.5rem;
-  margin-bottom: 2rem;
+}
+
+.signin-subtitle {
+  color: #333;
+  font-size: 12px;
+  font-weight: normal;
+  margin-bottom: 3rem;
 }
 
 .signin-form {
@@ -71,6 +77,36 @@
   opacity: 0.9;
 }
 
+.signin-options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 0.5rem;
+  margin-left: 0.5rem;
+}
+
+.remember-me {
+  font-size: 0.9rem;
+  color: #333;
+}
+
+.remember-me input {
+  margin-right: 6px;
+  accent-color: #00b9b9;
+}
+
+.forgot-password {
+  color: #00b9b9;
+  font-size: 0.9rem;
+  text-decoration: none;
+  margin-right: 1rem;
+}
+
+.forgot-password:hover {
+  text-decoration: underline;
+  color: #009d9d;
+}
+
 .signin-btn {
   margin-top: 1rem;
   padding: 14px 0;
@@ -79,7 +115,7 @@
   border: none;
   border-radius: 30px;
   font-size: 1.2rem;
-  color: rgb(255, 255, 255);
+  color: white;
   cursor: pointer;
   transition: 0.3s ease;
   align-self: center;
