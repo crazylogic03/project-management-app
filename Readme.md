@@ -50,7 +50,7 @@ A **full-featured project management platform** designed to streamline task orga
 |:-------------|:--------------|:----------------|
 | **Spruha** | Frontend Development (Login & Dashboard) | ✅ Completed — working UI and navigation. |
 | **Karthikeya & Thrishul** | Backend Setup (Supabase / Node.js + Express) | ⏳ In Progress — database schema & APIs under development. |
-| **Vamsi** | UI/UX & Components Design | ⏳ In Progress — creating consistent layouts and forms for projects & tasks. |
+| **Vamsi** | UI/UX & Components Design | ⏳ In Progress — creating layouts and pages for projects & tasks. |
 | **Thrishul** | Task & Project Management Logic | ⏳ Pending — to start after backend integration is ready. |
 
 ---
@@ -58,10 +58,12 @@ A **full-featured project management platform** designed to streamline task orga
 ### 🎯 **Next Targets / Upcoming Work**
 | Feature / Task | Description | Status / Assigned To |
 |:----------------|:-------------|:----------------------|
-| **Project CRUD Module** | Implement Create, Read, Update, Delete functionality for projects. | ⏳ In Progress |
-| **Task Management Module** | Add CRUD for tasks under each project (title, priority, due date, assignee). | ⏳ Planned |
-| **Team Management** | Build interface for adding members and assigning roles (Admin, Editor, Viewer). | ⏳ In Progress |
+| **Project CRUD Module** | Implement Create, Read, Update, Delete functionality for projects. | ⏳ Everyone are Working on Diferent PAges|
+| **DashBoard Routing** | Add CRUD for tasks under each project (title, priority, due date, assignee). |🧑‍💻 Spruha  |
+| **Project Details Page and Route** | Add CRUD for tasks under each project (title, priority, due date, assignee). |🧑‍💻 Karthikeya|
 | **Kanban Board View** | Drag-and-drop tasks between columns (“To Do”, “In Progress”, etc.). | ⏳ In Progress |
+| **Calender View** | Drag-and-drop tasks between columns (“To Do”, “In Progress”, etc.). | 🧑‍💻 Vasmi |
 | **Notifications System** | In-app notification system for deadlines, mentions, etc. | 🧑‍💻 Thrishul |
+| **Login Backend** | Setting Up OAuth | 🧑‍💻 Thrishul |
 
 ---
