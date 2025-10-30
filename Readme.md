@@ -22,8 +22,8 @@ A **full-featured project management platform** designed to streamline task orga
 - 💬 **Lucide React** — UI icons  
 
 ### **Backend (Planned)**
-- 🟢 **(Node.js + Express.js)** or **(Supabase)** — Server framework  
-- 🍃 **Prisma ORM** — Database or **(Supabase)**  
+- 🟢 **Node.js + Express.js** — Server framework  
+- 🍃 **Prisma ORM** — Database ORM  
 - 🧠 **JWT Authentication** — Secure login/signup  
 - 📤 **Nodemailer** — Email invitations & notifications  
 - 📡 **WebSockets (Socket.io)** — Real-time updates  
@@ -45,25 +45,56 @@ A **full-featured project management platform** designed to streamline task orga
 
 ---
 
-### 👨‍💻 **Team & Work Distribution**
+## 👨‍💻 **Team & Work Distribution**
 | Team Member | Area of Work | Current Status |
 |:-------------|:--------------|:----------------|
 | **Spruha** | Frontend Development (Login & Dashboard) | ✅ Completed — working UI and navigation. |
-| **Karthikeya & Thrishul** | Backend Setup (Supabase / Node.js + Express) | ⏳ In Progress — database schema & APIs under development. |
-| **Vamsi** | UI/UX & Components Design | ⏳ In Progress — creating layouts and pages for projects & tasks. |
+| **Karthikeya & Thrishul** | Backend Setup (Supabase / Node.js + Express) | ⏳ In Progress — database schema & API development. |
+| **Vamsi** | UI/UX & Components Design | ⏳ In Progress — designing layouts and task pages. |
 | **Thrishul** | Task & Project Management Logic | ⏳ Pending — to start after backend integration is ready. |
 
 ---
 
-### 🎯 **Next Targets / Upcoming Work**
+## 🎯 **Next Targets / Upcoming Work**
 | Feature / Task | Description | Status / Assigned To |
 |:----------------|:-------------|:----------------------|
-| **Project CRUD Module** | Implement Create, Read, Update, Delete functionality for projects. | ⏳ Everyone are Working on Diferent PAges|
-| **DashBoard Routing** | Add CRUD for tasks under each project (title, priority, due date, assignee). |🧑‍💻 Spruha  |
-| **Project Details Page and Route** | Add CRUD for tasks under each project (title, priority, due date, assignee). |🧑‍💻 Karthikeya|
+| **Project CRUD Module** | Implement Create, Read, Update, Delete functionality for projects. | ⏳ Everyone is working on different pages. |
+| **Dashboard Routing** | Set up routing and navigation between components. | 🧑‍💻 Spruha |
+| **Project Details Page & Route** | Add individual project pages showing task lists and progress. | 🧑‍💻 Karthikeya |
 | **Kanban Board View** | Drag-and-drop tasks between columns (“To Do”, “In Progress”, etc.). | ⏳ In Progress |
-| **Calender View** | Drag-and-drop tasks between columns (“To Do”, “In Progress”, etc.). | 🧑‍💻 Vasmi |
+| **Calendar View** | Visualize tasks/events on a calendar (daily, weekly, monthly). | 🧑‍💻 Vamsi |
 | **Notifications System** | In-app notification system for deadlines, mentions, etc. | 🧑‍💻 Thrishul |
-| **Login Backend** | Setting Up OAuth | 🧑‍💻 Thrishul |
+| **Login Backend (OAuth)** | Set up backend authentication with JWT/OAuth. | 🧑‍💻 Thrishul |
 
 ---
+
+## ⚙️ **Setup Guide (For Developers)**
+
+Follow these steps to set up and run the **Project Management Web App** locally.
+
+### 🧾 Step 1: Fork or Clone the Repository
+- **Option 1: Fork**
+  1. Click the **“Fork”** button on the top-right of this repository.
+  2. Select your GitHub account to fork it.
+
+- **Option 2: Clone**
+  ```bash
+  git clone https://github.com/<your-username>/<repo-name>.git
+  cd <repo-name>
+
+### 🧾 Step 2: Install Dependencies
+    Node.js (>=18) and run  npm install
+### 🧾 Step 3: Set Up Your .env (Only For Contributes)
+### 🧾 Step 4: Run Frontend 
+    cd client
+    npm install
+    npm run dev
+### 🧾 Step 5: Run Backend
+    cd server
+    npm install
+    npm run dev
+
+
+
+
+
