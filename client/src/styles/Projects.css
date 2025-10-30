@@ -376,5 +376,51 @@ body.dark-mode .cancel-btn {
 body.dark-mode .cancel-btn:hover {
   background: #555;
   color: #fff;
+}
 
+body.dark-mode .create-btn-modal {
+  background: var(--accent);
+  color: #fff;
+}
+
+body.dark-mode .create-btn-modal:hover {
+  background: #027a7a;
+}
+
+body.dark-mode .template-badge {
+  background: rgba(0, 150, 136, 0.2);
+  border-color: var(--accent);
+}
+
+body.dark-mode .template-name {
+  color: var(--accent);
+}
+
+body.dark-mode .template-info-box {
+  background: rgba(0, 150, 136, 0.05);
+  border-color: rgba(0, 150, 136, 0.2);
+}
+
+body.dark-mode .template-description {
+  color: #aaa;
+}
+
+body.dark-mode .template-lists {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: var(--accent);
+  color: #ccc;
+}
+
+body.dark-mode .template-lists strong {
+  color: var(--accent);
+}
+
+body.dark-mode .dropdown-item {
+  color: var(--text-primary);
+  border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+body.dark-mode .dropdown-item:hover {
+  background: linear-gradient(135deg, rgba(0, 150, 136, 0.15) 0%, rgba(0, 150, 136, 0.25) 100%);
+  color: var(--accent);
 }
