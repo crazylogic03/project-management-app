@@ -47,51 +47,57 @@ const DashboardPage = () => {
   return (
     <div className="dashboard-page">
       <div className="dashboard-container">
-        <h2 className="site-name">Project Manager</h2>
+
+        {/* ---------- LEFT PANEL ---------- */}
         <aside className="left-panel">
-                <nav className="sidebar-nav">
-                    <div className="navbar">
-                        <a href="#" className="active"><Home size={20}/> Dashboard</a>
-                        <a href="#"><FolderKanban size={20}/> Projects</a>
-                        <a href="#"><FileText size={20}/> Project Detail</a>
-                        <a href="#"><CheckSquare size={20}/> Task Detail</a>
-                    </div>
-                    <a href="#"><CalendarDays size={20}/> Calendar</a>
-                    <a href="#"><BarChart3 size={20}/> Reports</a>
-                    <a href="#"><FileStack size={20}/> Files</a>
-                </nav>
-            <div className="sidebar-footer">
-                <a href="#"><HelpCircle size={20}/> Help & Settings</a>
+          <h2 className="site-name">Project Manager</h2>
+          <nav className="sidebar-nav">
+            <div className="navbar">
+              <a href="#" className="active"><Home size={20}/> Dashboard</a>
+              <a href="#"><FolderKanban size={20}/> Projects</a>
+              <a href="#"><FileText size={20}/> Project Detail</a>
+              <a href="#"><CheckSquare size={20}/> Task Detail</a>
             </div>
+            <a href="#"><CalendarDays size={20}/> Calendar</a>
+            <a href="#"><BarChart3 size={20}/> Reports</a>
+            <a href="#"><FileStack size={20}/> Files</a>
+          </nav>
+          <div className="sidebar-footer">
+            <a href="#"><HelpCircle size={20}/> Help & Settings</a>
+          </div>
         </aside>
 
         <div className="divider"></div>
 
-        {/* Main Content */}
-        <div className="main-content">
-            <div className="dashboard-top">
-                <div className="search-bar">
-                    <Search size={20} className="search-icon" />
-                    <input type="text" placeholder="Search" />
-                </div>
-
-                <div className="top-right">
-                    <div className="icon"><Settings size={18} /></div>
-                    <div className="icon"><Bell size={18} /></div>
-                    <div className="profile">
-                    <span>David Muller</span>
-                    <img src="https://i.pravatar.cc/40" alt="Profile" />
-                    </div>
-                </div>
+        {/* ---------- MAIN BODY ---------- */}
+        <main className="main-body">
+          <div className="dashboard-top">
+            <div className="top-right">
+              <div className="icon"><Settings size={18} /></div>
+              <div className="icon"><Bell size={18} /></div>
+              <div className="profile">
+                <span>David Muller</span>
+                <img src="https://i.pravatar.cc/40" alt="Profile" />
+              </div>
             </div>
+          </div>
 
-            <div className="divider1"></div>
+          <div className="divider1"></div>
 
-            <header className="dashboard-header">
-                <p>Here’s what’s happening with your projects today.</p>
-            </header>
+          <header className="dashboard-header">
+            <h1>Welcome back, David!</h1>
+            <p>
+              Here’s what’s happening with your projects today,{" "}
+              {new Date().toLocaleDateString("en-US", {
+                weekday: "long",
+                month: "long",
+                day: "2-digit",
+                year: "numeric",
+              })}
+              .
+            </p>
+          </header>
 
-          {/* Stats */}
           <div className="stats-container">
             <div className="stat-card total">
               <h3>Total Projects</h3>
@@ -105,78 +111,112 @@ const DashboardPage = () => {
               <h3>Completed Tasks</h3>
               <p>{completedTasks}</p>
             </div>
-            <div className="stat-card progress">
-              <h3>Weekly Progress</h3>
-              <div className="circular-progress">
-                <svg>
-                  <circle cx="35" cy="35" r="35"></circle>
-                  <circle
-                    cx="35"
-                    cy="35"
-                    r="35"
-                    style={{ strokeDashoffset: 220 - (220 * weeklyProgress) / 100 }}
-                  ></circle>
-                </svg>
-                <div className="number">{weeklyProgress}%</div>
-              </div>
-            </div>
           </div>
 
-          {/* Tasks & Widgets */}
-          <div className="main-grid">
-            <section className="upcoming-section">
-              <h2>Upcoming Deadlines</h2>
-              <div className="tasks-grid">
-                {tasks.map(task => (
-                  <div className="task-card" key={task.id}>
-                    <h3>{task.title}</h3>
-                    <p className="type">{task.type}</p>
-                    <p className="deadline">
-                      Deadline: {new Date(task.deadline).toLocaleString()}
-                    </p>
-                    <div className="countdown">
-                      ⏰ {countdowns[task.id] || "Loading..."}
+          <section className="upcoming-section">
+            <h2>Upcoming Deadlines</h2>
+            <div className="tasks-grid">
+              {tasks.map((task) => (
+                <div className="task-card" key={task.id}>
+                  <h3>{task.title}</h3>
+                  <p className="type">{task.type}</p>
+                  <p className="deadline">
+                    Deadline: {new Date(task.deadline).toLocaleString()}
+                  </p>
+                  <div className="countdown">
+                    ⏰ {countdowns[task.id] || "Loading..."}
+                  </div>
+                  <div className="progress-container">
+                    <div className="progress-info">
+                      <span>Progress</span>
+                      <span>{task.completed}/{task.total}</span>
                     </div>
-                    <div className="progress-container">
-                      <div className="progress-info">
-                        <span>Progress</span>
-                        <span>{task.completed}/{task.total}</span>
-                      </div>
-                      <div className="progress-bar">
-                        <div className="progress-fill" style={{width: `${(task.completed/task.total)*100}%`}}></div>
-                      </div>
+                    <div className="progress-bar">
+                      <div
+                        className="progress-fill"
+                        style={{
+                          width: `${(task.completed / task.total) * 100}%`,
+                        }}
+                      ></div>
                     </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+        </main>
+
+        <div className="divider"></div>
+
+        {/* ---------- RIGHT PANEL ---------- */}
+        <aside className="right-panel">
+          <div className="widget-card">
+            <h3>Recent Updates</h3>
+            <ul>
+              {notifications.map((n) => (
+                <li key={n.id}>
+                  <p>{n.text}</p>
+                  <span>{n.time}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="widget-card1 stats-widget">
+            <div className="stats-tabs">
+              <span>Agenda</span>
+              <span>
+                Mentions<sup>69</sup>
+              </span>
+              <button className="active">Statics</button>
+            </div>
+
+            <div className="weekly-activity-card">
+              <div className="activity-info">
+                <h2>Weekly activity</h2>
+                <p>58%</p>
+              </div>
+              <span className="percent">+7%</span>
+            </div>
+
+            <div className="total-progress-card">
+              <div className="progress-info">
+                <h2>Total progress</h2>
+                {/* <span>This week</span> */}
+              </div>
+              <span className="percent">+7%</span>
+            </div>
+
+            <div className="working-activities">
+              <div className="header">
+                <h4>Working activities</h4>
+                <span className="month">June 2024</span>
+              </div>
+              <div className="days">
+                {["Wed", "Thu", "Fri", "Sat", "Sun"].map((day, idx) => (
+                  <div
+                    key={idx}
+                    className={`day ${day === "Fri" ? "active" : ""}`}
+                  >
+                    <p>{day}</p>
+                    <span>{12 + idx}</span>
                   </div>
                 ))}
               </div>
-            </section>
-
-            <aside className="sidebar-widgets">
-              <div className="widget-card">
-                <h3>Recent Updates</h3>
-                <ul>
-                  {notifications.map(n => (
-                    <li key={n.id}>
-                      <p>{n.text}</p>
-                      <span>{n.time}</span>
-                    </li>
-                  ))}
-                </ul>
+              <div className="chart">
+                <div className="block block1"></div>
+                <div className="block block2"></div>
+                <div className="block block3"></div>
+                <div className="block block4"></div>
+                <div className="block block5"></div>
               </div>
-
-              <div className="widget-card">
-                <h3>Weekly Activity</h3>
-                <div className="activity-bars">
-                  {[40, 60, 80, 30, 50, 70, 20].map((val, idx) => (
-                    <div key={idx} className="bar">
-                      <div className="bar-fill" style={{height: `${val}%`}}></div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </aside>
+              <p className="total-time">
+                Total time: <b>24 hours</b>
+              </p>
+            </div>
           </div>
-        </div>
+        </aside>
+
       </div>
     </div>
   );
