@@ -1,17 +1,19 @@
 import React, { useEffect, useState } from "react";
-import { 
-  Home, FolderKanban, FileText, CheckSquare, CalendarDays, 
-  BarChart3, FileStack, Settings, Search, Bell, HelpCircle
+import {
+  Home, FolderKanban, FileText, CheckSquare, CalendarDays,
+  BarChart3, FileStack, Settings, Search, Bell, HelpCircle, LogOut
 } from "lucide-react";
 import "../styles/Dashboard.css";
+import { useNavigate } from "react-router-dom";
 
 const DashboardPage = () => {
+  const navigate = useNavigate();
+  const [user, setUser] = useState(null);
   const [tasks, setTasks] = useState([
-    { id: 1, title: "Design Landing Page", type: "UI/UX Design", deadline: "2025-10-30T15:30:00", completed: 2, total: 5 },
-    { id: 2, title: "Database Optimization", type: "Backend Task", deadline: "2025-10-28T12:00:00", completed: 4, total: 4 },
-    { id: 3, title: "Marketing Strategy Draft", type: "Planning", deadline: "2025-11-01T10:00:00", completed: 1, total: 3 },
+    { id: 1, title: "Design Landing Page", type: "UI/UX Design", deadline: "2025-11-05T15:30:00", completed: 2, total: 5 },
+    { id: 2, title: "Database Optimization", type: "Backend Task", deadline: "2025-11-10T12:00:00", completed: 4, total: 4 },
+    { id: 3, title: "Marketing Strategy Draft", type: "Planning", deadline: "2025-11-15T10:00:00", completed: 1, total: 3 },
   ]);
-
   const [countdowns, setCountdowns] = useState({});
   const [weeklyProgress] = useState(72);
   const [notifications] = useState([
@@ -20,8 +22,51 @@ const DashboardPage = () => {
     { id: 3, text: "Team meeting scheduled for Friday", time: "1d ago" },
   ]);
 
+  // ✅ Fetch current user (Google or Normal)
   useEffect(() => {
-    const interval = setInterval(() => {
+    const fetchUser = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const isGoogleLogin = window.location.search.includes("google=true");
+
+        let res;
+        if (isGoogleLogin) {
+          res = await fetch("http://localhost:3000/api/users/me", { credentials: "include" });
+        } else if (token) {
+          res = await fetch("http://localhost:3000/api/users/me", {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+        }
+
+        if (res && res.ok) {
+          const data = await res.json();
+          setUser(data);
+        } else {
+          localStorage.removeItem("token");
+          navigate("/login");
+        }
+      } catch (err) {
+        console.error("Error fetching user:", err);
+        navigate("/login");
+      }
+    };
+    fetchUser();
+  }, [navigate]);
+
+  // ✅ Handle Logout
+  const handleLogout = async () => {
+    try {
+      localStorage.removeItem("token");
+      await fetch("http://localhost:3000/api/users/logout", { credentials: "include" });
+      navigate("/login");
+    } catch (err) {
+      console.error("Logout failed:", err);
+    }
+  };
+
+  // ✅ Countdown Timer
+  useEffect(() => {
+    const updateCountdowns = () => {
       const now = new Date().getTime();
       const newCountdowns = {};
       tasks.forEach((task) => {
@@ -36,7 +81,10 @@ const DashboardPage = () => {
         }
       });
       setCountdowns(newCountdowns);
-    }, 60000);
+    };
+
+    updateCountdowns();
+    const interval = setInterval(updateCountdowns, 60000);
     return () => clearInterval(interval);
   }, [tasks]);
 
@@ -48,50 +96,68 @@ const DashboardPage = () => {
     <div className="dashboard-page">
       <div className="dashboard-container">
         <h2 className="site-name">Project Manager</h2>
+
+        {/* ===== Left Sidebar ===== */}
         <aside className="left-panel">
-                <nav className="sidebar-nav">
-                    <div className="navbar">
-                        <a href="#" className="active"><Home size={20}/> Dashboard</a>
-                        <a href="#"><FolderKanban size={20}/> Projects</a>
-                        <a href="#"><FileText size={20}/> Project Detail</a>
-                        <a href="#"><CheckSquare size={20}/> Task Detail</a>
-                    </div>
-                    <a href="#"><CalendarDays size={20}/> Calendar</a>
-                    <a href="#"><BarChart3 size={20}/> Reports</a>
-                    <a href="#"><FileStack size={20}/> Files</a>
-                </nav>
-            <div className="sidebar-footer">
-                <a href="#"><HelpCircle size={20}/> Help & Settings</a>
+          <nav className="sidebar-nav">
+            <div className="navbar">
+              <a href="#" className="active"><Home size={20} /> Dashboard</a>
+              <a href="#"><FolderKanban size={20} /> Projects</a>
+              <a href="#"><FileText size={20} /> Project Detail</a>
+              <a href="#"><CheckSquare size={20} /> Task Detail</a>
             </div>
+            <a href="#"><CalendarDays size={20} /> Calendar</a>
+            <a href="#"><BarChart3 size={20} /> Reports</a>
+            <a href="#"><FileStack size={20} /> Files</a>
+          </nav>
+          <div className="sidebar-footer">
+            <a href="#"><HelpCircle size={20} /> Help & Settings</a>
+          </div>
         </aside>
 
         <div className="divider"></div>
 
-        {/* Main Content */}
+        {/* ===== Main Content ===== */}
         <div className="main-content">
-            <div className="dashboard-top">
-                <div className="search-bar">
-                    <Search size={20} className="search-icon" />
-                    <input type="text" placeholder="Search" />
-                </div>
-
-                <div className="top-right">
-                    <div className="icon"><Settings size={18} /></div>
-                    <div className="icon"><Bell size={18} /></div>
-                    <div className="profile">
-                    <span>David Muller</span>
-                    <img src="https://i.pravatar.cc/40" alt="Profile" />
-                    </div>
-                </div>
+          {/* --- Top Navbar --- */}
+          <div className="dashboard-top">
+            <div className="search-bar">
+              <Search size={20} className="search-icon" />
+              <input type="text" placeholder="Search" />
             </div>
 
-            <div className="divider1"></div>
+            <div className="top-right">
+              <div className="icon"><Settings size={18} /></div>
+              <div className="icon"><Bell size={18} /></div>
 
-            <header className="dashboard-header">
-                <p>Here’s what’s happening with your projects today.</p>
-            </header>
+              {user && (
+                <div className="profile">
+                  {user.profilePic ? (
+                    <img src={user.profilePic} alt="Profile" />
+                  ) : (
+                    <div className="profile-initial">
+                      {user.name ? user.name.charAt(0).toUpperCase() : "U"}
+                    </div>
+                  )}
+                  <span className="username">
+                    {user.name || user.email}
+                  </span>
+                  <button className="logout-btn" onClick={handleLogout}>
+                    <LogOut size={18} />
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
 
-          {/* Stats */}
+          <div className="divider1"></div>
+
+          {/* --- Dashboard Header --- */}
+          <header className="dashboard-header">
+            <p>Here’s what’s happening with your projects today.</p>
+          </header>
+
+          {/* --- Stats Cards --- */}
           <div className="stats-container">
             <div className="stat-card total">
               <h3>Total Projects</h3>
@@ -122,7 +188,7 @@ const DashboardPage = () => {
             </div>
           </div>
 
-          {/* Tasks & Widgets */}
+          {/* --- Tasks and Widgets --- */}
           <div className="main-grid">
             <section className="upcoming-section">
               <h2>Upcoming Deadlines</h2>
@@ -143,7 +209,10 @@ const DashboardPage = () => {
                         <span>{task.completed}/{task.total}</span>
                       </div>
                       <div className="progress-bar">
-                        <div className="progress-fill" style={{width: `${(task.completed/task.total)*100}%`}}></div>
+                        <div
+                          className="progress-fill"
+                          style={{ width: `${(task.completed / task.total) * 100}%` }}
+                        ></div>
                       </div>
                     </div>
                   </div>
@@ -169,7 +238,7 @@ const DashboardPage = () => {
                 <div className="activity-bars">
                   {[40, 60, 80, 30, 50, 70, 20].map((val, idx) => (
                     <div key={idx} className="bar">
-                      <div className="bar-fill" style={{height: `${val}%`}}></div>
+                      <div className="bar-fill" style={{ height: `${val}%` }}></div>
                     </div>
                   ))}
                 </div>
