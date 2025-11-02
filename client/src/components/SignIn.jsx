@@ -6,10 +6,26 @@ import image from "../assets/image2.png";
 const SignInPage = () => {
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    navigate("/dashboard");
+    const email = e.target[0].value;
+    const password = e.target[1].value;
+
+    const res = await fetch("http://localhost:3000/api/users/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
+
+    const data = await res.json();
+    if (res.ok) {
+      localStorage.setItem("token", data.token);
+      navigate("/dashboard");
+    } else {
+      alert(data.message);
+    }
   };
+
 
   return (
     <div className="signin-container">
@@ -25,6 +41,13 @@ const SignInPage = () => {
 
           <label>Password</label>
           <input type="password" placeholder="Enter your password" required />
+          <button
+            className="google-btn"
+            onClick={() => window.open("http://localhost:3000/api/users/google", "_self")}
+          >
+            Sign in with Google
+          </button>
+
 
           <div className="signin-options">
             <label className="remember-me">

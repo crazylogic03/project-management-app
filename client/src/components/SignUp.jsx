@@ -1,15 +1,30 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/SignUp.css";
-import image from "../assets/image1.png"; 
+import image from "../assets/image1.png";
 
 const SignupPage = () => {
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Here you can add signup logic
-    navigate("/dashboard"); // Redirect to dashboard
+    const name = e.target[0].value;
+    const email = e.target[1].value;
+    const password = e.target[2].value;
+
+    const res = await fetch("http://localhost:3000/api/users/signup", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name, email, password }),
+    });
+
+    const data = await res.json();
+    if (res.ok) {
+      alert("Signup successful!");
+      navigate("/dashboard");
+    } else {
+      alert(data.message);
+    }
   };
 
   return (
