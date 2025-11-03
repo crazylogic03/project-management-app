@@ -1,44 +1,46 @@
-const { PrismaClient } = require("@prisma/client")
-const bcrypt = ("bcryptjs")
-const jwt = ("jsonwebtoken")
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+const { PrismaClient } = require("@prisma/client");
 
 const prisma = new PrismaClient();
-const JWT_SECRET = process.env.JWT_SECRET || "supersecretkey";
 
-// ✅ Signup
-const signup = async (req, res) => {
-    try {
-        const { name, email, password } = req.body;
-        const existing = await prisma.user.findUnique({ where: { email } });
-        if (existing) return res.status(400).json({ message: "User already exists" });
+// ✅ Signup Controller
+exports.signup = async (req, res) => {
+  try {
+    const { name, email, password } = req.body;
+    const existingUser = await prisma.user.findUnique({ where: { email } });
+    if (existingUser) return res.status(400).json({ message: "User already exists" });
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const user = await prisma.user.create({
+      data: { name, email, password: hashedPassword },
+    });
+    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET || "supersecretkey", {
+      expiresIn: "7d",
+    });
 
-        const hashedPassword = await bcrypt.hash(password, 10);
-        const user = await prisma.user.create({
-            data: { name, email, password: hashedPassword },
-        });
-
-        const token = jwt.sign({ id: user.id }, JWT_SECRET, { expiresIn: "1d" });
-        res.json({ message: "Signup successful", token, user });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
+    res.status(201).json({ message: "User created successfully", token });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error during signup" });
+  }
 };
 
-// ✅ Signin
-const signin = async (req, res) => {
-    try {
-        const { email, password } = req.body;
-        const user = await prisma.user.findUnique({ where: { email } });
-        if (!user) return res.status(404).json({ message: "User not found" });
+// ✅ Signin Controller
+exports.signin = async (req, res) => {
+  try {
+    const { email, password } = req.body;
 
-        const valid = await bcrypt.compare(password, user.password);
-        if (!valid) return res.status(401).json({ message: "Invalid credentials" });
+    const user = await prisma.user.findUnique({ where: { email } });
+    if (!user) return res.status(404).json({ message: "User not found" });
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) return res.status(400).json({ message: "Invalid credentials" });
+    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET || "supersecretkey", {
+      expiresIn: "7d",
+    });
 
-        const token = jwt.sign({ id: user.id }, JWT_SECRET, { expiresIn: "1d" });
-        res.json({ message: "Login successful", token, user });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
+    res.json({ message: "Login successful", token });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error during login" });
+  }
 };
-
-module.exports = { signup, signin }
