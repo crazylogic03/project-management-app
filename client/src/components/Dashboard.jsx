@@ -52,8 +52,6 @@ const DashboardPage = () => {
     };
     fetchUser();
   }, [navigate]);
-
-  // ✅ Handle Logout
   const handleLogout = async () => {
     try {
       localStorage.removeItem("token");
@@ -63,8 +61,6 @@ const DashboardPage = () => {
       console.error("Logout failed:", err);
     }
   };
-
-  // ✅ Countdown Timer
   useEffect(() => {
     const updateCountdowns = () => {
       const now = new Date().getTime();
