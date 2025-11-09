@@ -37,33 +37,34 @@
 }
 
 .signup-title {
+  margin-top: 50px;
   color: #00b9b9;
-  font-size: 2rem;
+  font-size: 2.5rem;
 }
 
 .signup-subtitle {
   color: #333;
-  font-size: 12px;
+  font-size: 15px;
   font-weight: normal;
-  margin-bottom: 1.5rem;
+  margin-bottom: 30px;
 }
 
 .signup-form {
-  width: 50%;
-  height: 60%;
+  width: 60%;
+  height: 100%;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 10px;
 }
 
 .signup-form label {
   font-size: 15px;
-  font-weight: 300;
+  font-weight: 500;
   color: #333;
 }
 
 .signup-form input {
-  padding: 8px 12px;
+  padding: 12px 20px;
   border: none;
   outline: none;
   border-radius: 30px;
@@ -78,7 +79,7 @@
 }
 
 .signup-btn {
-  margin-top: 0.5rem;
+  margin-top: 1.5rem;
   padding: 8px 0;
   width: 130px;
   background-color: #00b9b9;
@@ -95,27 +96,32 @@
   background-color: #009d9d;
 }
 
-/* .google-auth-icon {
-  display: flex;
-  justify-content: center;
-  margin-top: 15px;
+.google-btn {
+  margin-top: 1rem;
+  padding: 10px 0;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 25px;
+  font-size: 0.95rem;
+  color: #444;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: all 0.3s ease;
 }
 
-.google-auth-icon img {
-  width: 35px;
-  height: 35px;
-  transition: transform 0.2s ease;
+.google-btn:hover {
+  background-color: #f8f8f8;
+  border-color: #aaa;
 }
-
-.google-auth-icon img:hover {
-  transform: scale(1.1);
-} */
 
 .signin-text {
-  margin-top: 1rem;
   font-size: 1rem;
   color: #333;
+  position: relative;
+  top: -35px; 
 }
 
 .signin-text a {
