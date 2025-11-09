@@ -6,9 +6,35 @@ import image from "../assets/image2.png";
 const SignInPage = () => {
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    navigate("/dashboard");
+    const email = e.target[0].value;
+    const password = e.target[1].value;
+
+    try {
+      const res = await fetch("http://localhost:3000/api/users/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        localStorage.setItem("token", data.token);
+        alert("✅ Login successful!");
+        navigate("/dashboard");
+      } else {
+        alert(data.message || "Login failed");
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Something went wrong. Please try again later.");
+    }
+  };
+
+  const handleGoogleLogin = () => {
+    window.open("http://localhost:3000/api/users/google", "_self");
   };
 
   return (
@@ -19,7 +45,7 @@ const SignInPage = () => {
           Take a look at what's happening in your Account
         </h3>
 
-        <form className="signin-form" onSubmit={handleSubmit}>
+        <form className="signin-form" onSubmit={handleLogin}>
           <label>Email</label>
           <input type="email" placeholder="Enter your email" required />
 
@@ -36,10 +62,18 @@ const SignInPage = () => {
           </div>
 
           <button type="submit" className="signin-btn">Sign In</button>
+
+          <button
+            type="button"
+            className="google-btn"
+            onClick={handleGoogleLogin}
+          >
+            Sign in with Google
+          </button>
         </form>
 
         <p className="signup-text">
-          Don’t have an account? <a href="/signup">Sign Up</a>
+          Don't have an account? <a href="/signup">Sign Up</a>
         </p>
       </div>
 

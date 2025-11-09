@@ -1,19 +1,45 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/SignUp.css";
-import image from "../assets/image1.png"; 
+import image from "../assets/image1.png";
 
 const SignupPage = () => {
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSignup = async (e) => {
     e.preventDefault();
-    navigate("/dashboard"); 
-  };
 
-  // const handleGoogleClick = () => {
-  //   console.log("Google auth clicked");
-  // };
+    const name = e.target[0].value;
+    const email = e.target[1].value;
+    const password = e.target[2].value;
+    const confirmPassword = e.target[3].value;
+
+    if (password !== confirmPassword) {
+      alert("Passwords do not match!");
+      return;
+    }
+
+    try {
+      const res = await fetch("http://localhost:3000/api/users/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, password }),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        localStorage.setItem("token", data.token);
+        alert("✅ Signup successful!");
+        navigate("/dashboard");
+      } else {
+        alert(data.message || "Signup failed");
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Something went wrong. Please try again later.");
+    }
+  };
 
   return (
     <div className="signup-container">
@@ -23,9 +49,11 @@ const SignupPage = () => {
 
       <div className="signup-right">
         <h2 className="signup-title">Join Us!</h2>
-        <h3 className="signup-subtitle">Stay connected, stay productive, and reach milestones together.</h3>
+        <h3 className="signup-subtitle">
+          Stay connected, stay productive, and reach milestones together.
+        </h3>
 
-        <form className="signup-form" onSubmit={handleSubmit}>
+        <form className="signup-form" onSubmit={handleSignup}>
           <label>Full Name</label>
           <input type="text" placeholder="Enter your full name" required />
 
@@ -39,14 +67,15 @@ const SignupPage = () => {
           <input type="password" placeholder="Confirm your password" required />
 
           <button type="submit" className="signup-btn">Sign Up</button>
-        </form>
 
-        {/* <div className="google-auth-icon" onClick={handleGoogleClick}>
-          <img
-            src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/google/google-original.svg"
-            alt="Google Icon"
-          />
-        </div> */}
+          <button
+            type="button"
+            className="google-btn"
+            onClick={() => window.open("http://localhost:3000/api/users/google", "_self")}
+          >
+            Sign up with Google
+          </button>
+        </form>
 
         <p className="signin-text">
           Already have an account? <a href="/login">Sign In</a>
