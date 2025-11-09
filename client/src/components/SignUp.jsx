@@ -11,6 +11,10 @@ const SignupPage = () => {
     navigate("/dashboard"); 
   };
 
+  // const handleGoogleClick = () => {
+  //   console.log("Google auth clicked");
+  // };
+
   return (
     <div className="signup-container">
       <div className="signup-left">
@@ -36,6 +40,13 @@ const SignupPage = () => {
 
           <button type="submit" className="signup-btn">Sign Up</button>
         </form>
+
+        {/* <div className="google-auth-icon" onClick={handleGoogleClick}>
+          <img
+            src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/google/google-original.svg"
+            alt="Google Icon"
+          />
+        </div> */}
 
         <p className="signin-text">
           Already have an account? <a href="/login">Sign In</a>

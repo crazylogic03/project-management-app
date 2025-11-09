@@ -95,6 +95,23 @@
   background-color: #009d9d;
 }
 
+/* .google-auth-icon {
+  display: flex;
+  justify-content: center;
+  margin-top: 15px;
+  cursor: pointer;
+}
+
+.google-auth-icon img {
+  width: 35px;
+  height: 35px;
+  transition: transform 0.2s ease;
+}
+
+.google-auth-icon img:hover {
+  transform: scale(1.1);
+} */
+
 .signin-text {
   margin-top: 1rem;
   font-size: 1rem;

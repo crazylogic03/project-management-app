@@ -53,17 +53,17 @@ const DashboardPage = () => {
           <h2 className="site-name">Project Manager</h2>
           <nav className="sidebar-nav">
             <div className="navbar">
-              <a href="#" className="active"><Home size={20}/> Dashboard</a>
-              <a href="#"><FolderKanban size={20}/> Projects</a>
-              <a href="#"><FileText size={20}/> Project Detail</a>
-              <a href="#"><CheckSquare size={20}/> Task Detail</a>
+              <a href="#" className="active"><Home size={20}/>Dashboard</a>
+              <a href="#"><FolderKanban size={20}/>Projects</a>
+              <a href="#"><FileText size={20}/>Project Detail</a>
+              <a href="#"><CheckSquare size={20}/>Task Detail</a>
             </div>
-            <a href="#"><CalendarDays size={20}/> Calendar</a>
-            <a href="#"><BarChart3 size={20}/> Reports</a>
-            <a href="#"><FileStack size={20}/> Files</a>
+            <a href="#"><CalendarDays size={20}/>Calendar</a>
+            <a href="#"><BarChart3 size={20}/>Reports</a>
+            <a href="#"><FileStack size={20}/>Files</a>
           </nav>
           <div className="sidebar-footer">
-            <a href="#"><HelpCircle size={20}/> Help & Settings</a>
+            <a href="#"><HelpCircle size={20}/>Settings</a>
           </div>
         </aside>
 
