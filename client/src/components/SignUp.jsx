@@ -8,8 +8,7 @@ const SignupPage = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Here you can add signup logic
-    navigate("/dashboard"); // Redirect to dashboard
+    navigate("/dashboard"); 
   };
 
   return (
