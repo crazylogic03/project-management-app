@@ -1,11 +1,51 @@
 import React, { useEffect, useState } from "react";
-import { 
-  Home, FolderKanban, FileText, CheckSquare, CalendarDays, 
+import {
+  Home, FolderKanban, FileText, CheckSquare, CalendarDays,
   BarChart3, FileStack, Settings, Search, Bell, HelpCircle
 } from "lucide-react";
 import "../styles/Dashboard.css";
 
 const DashboardPage = () => {
+  const [user, setUser] = useState(null);
+
+  // ✅ Fetch logged-in user
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const token = localStorage.getItem("token");
+
+        const res = await fetch("http://localhost:3000/api/users/me", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          credentials: "include",
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          setUser(data);
+        }
+      } catch (err) {
+        console.error("Error fetching user:", err);
+      }
+    };
+
+    fetchUser();
+  }, []);
+
+  // ✅ Logout
+  const handleLogout = async () => {
+    try {
+      localStorage.removeItem("token");
+      await fetch("http://localhost:3000/api/users/logout", {
+        credentials: "include",
+      });
+      window.location.href = "/login";
+    } catch (err) {
+      console.error("Logout failed:", err);
+    }
+  };
+
   const [tasks, setTasks] = useState([
     { id: 1, title: "Design Landing Page", type: "UI/UX Design", deadline: "2025-10-30T15:30:00", completed: 2, total: 5 },
     { id: 2, title: "Database Optimization", type: "Backend Task", deadline: "2025-10-28T12:00:00", completed: 4, total: 4 },
@@ -53,17 +93,17 @@ const DashboardPage = () => {
           <h2 className="site-name">Project Manager</h2>
           <nav className="sidebar-nav">
             <div className="navbar">
-              <a href="#" className="active"><Home size={20}/>Dashboard</a>
-              <a href="#"><FolderKanban size={20}/>Projects</a>
-              <a href="#"><FileText size={20}/>Project Detail</a>
-              <a href="#"><CheckSquare size={20}/>Task Detail</a>
+              <a href="#" className="active"><Home size={20} />Dashboard</a>
+              <a href="#"><FolderKanban size={20} />Projects</a>
+              <a href="#"><FileText size={20} />Project Detail</a>
+              <a href="#"><CheckSquare size={20} />Task Detail</a>
             </div>
-            <a href="#"><CalendarDays size={20}/>Calendar</a>
-            <a href="#"><BarChart3 size={20}/>Reports</a>
-            <a href="#"><FileStack size={20}/>Files</a>
+            <a href="#"><CalendarDays size={20} />Calendar</a>
+            <a href="#"><BarChart3 size={20} />Reports</a>
+            <a href="#"><FileStack size={20} />Files</a>
           </nav>
           <div className="sidebar-footer">
-            <a href="#"><HelpCircle size={20}/>Settings</a>
+            <a href="#"><HelpCircle size={20} />Settings</a>
           </div>
         </aside>
 
@@ -75,19 +115,30 @@ const DashboardPage = () => {
             <div className="top-right">
               <div className="icon"><Settings size={18} /></div>
               <div className="icon"><Bell size={18} /></div>
-              <div className="profile">
-                <span>David Muller</span>
-                <img src="https://i.pravatar.cc/40" alt="Profile" />
-              </div>
+
+              {/* ✅ UPDATED PROFILE SECTION */}
+              {user && (
+                <div className="profile">
+                  <span>{user.name || user.email}</span>
+                  {user.profilePic ? (
+                    <img src={user.profilePic} alt="Profile" />
+                  ) : (
+                    <img src="https://i.pravatar.cc/40" alt="Profile" />
+                  )}
+                  <button className="logout-btn" onClick={handleLogout}>
+                    Logout
+                  </button>
+                </div>
+              )}
             </div>
           </div>
 
           <div className="divider1"></div>
 
           <header className="dashboard-header">
-            <h1>Welcome back, David!</h1>
+            <h1>Welcome back, {user?.name || "User"}!</h1>
             <p>
-              Here’s what’s happening with your projects today,{" "}
+              Here's what's happening with your projects today,{" "}
               {new Date().toLocaleDateString("en-US", {
                 weekday: "long",
                 month: "long",
@@ -223,4 +274,3 @@ const DashboardPage = () => {
 };
 
 export default DashboardPage;
-
