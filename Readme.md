@@ -5,7 +5,6 @@ A **full-featured project management platform** designed to streamline task orga
 ---
 
 ## 🚧 Current Progress
-✅ **Login (Frontend)**  
 ✅ **Dashboard (Frontend)**  
 🔜 **All other modules are in development**
 
@@ -63,8 +62,7 @@ A **full-featured project management platform** designed to streamline task orga
 | **Project Details Page & Route** | Add individual project pages showing task lists and progress. | 🧑‍💻 Karthikeya |
 | **Kanban Board View** | Drag-and-drop tasks between columns (“To Do”, “In Progress”, etc.). | ⏳ In Progress |
 | **Calendar View** | Visualize tasks/events on a calendar (daily, weekly, monthly). | 🧑‍💻 Vamsi |
-| **Notifications System** | In-app notification system for deadlines, mentions, etc. | 🧑‍💻 Thrishul |
-| **Login Backend (OAuth)** | Set up backend authentication with JWT/OAuth. | 🧑‍💻 Thrishul |
+| **Notifications System** | In-app notification system for deadlines, mentions, etc. | 
 
 ---
 
