@@ -7,26 +7,44 @@ import { useNavigate } from "react-router-dom";
 const Dashboard = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
-
-  // -------------------------------
-  // 1️⃣ LOAD USER FROM LOCALSTORAGE FIRST
-  // -------------------------------
   useEffect(() => {
-    const savedUser = localStorage.getItem("user");
+    const fetchUser = async () => {
+      try {
+        const token = localStorage.getItem("token");
 
-    if (savedUser) {
-      setUser(JSON.parse(savedUser));
-    } else {
-      // If no user stored → redirect to login
-      navigate("/login");
-    }
-  }, [navigate]);
+        let res;
 
-  // -------------------------------
-  // 2️⃣ LOGOUT HANDLER
-  // -------------------------------
+        if (window.location.search.includes("google=true")) {
+          res = await fetch("http://localhost:3000/api/users/me", { credentials: "include" });
+        }
+        else if (token) {
+          res = await fetch("http://localhost:3000/api/users/me", {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+        }
+        else {
+          return navigate("/login");
+        }
+
+        if (!res.ok) return navigate("/login");
+
+        const userData = await res.json();
+        setUser(userData);
+
+        localStorage.setItem("user", JSON.stringify(userData));
+
+      } catch (err) {
+        console.error(err);
+        navigate("/login");
+      }
+    };
+
+    fetchUser();
+  }, []);
+
+
   const handleLogout = async () => {
-    localStorage.removeItem("user");  // manual login + google login both use this
+    localStorage.removeItem("user");
     localStorage.removeItem("token");
 
     await fetch("http://localhost:3000/api/users/logout", { credentials: "include" });
@@ -34,9 +52,6 @@ const Dashboard = () => {
     navigate("/login");
   };
 
-  // -------------------------------
-  // Dummy Tasks (your original code)
-  // -------------------------------
   const [tasks, setTasks] = useState([
     { id: 1, title: "Design Landing Page", type: "UI/UX Design", deadline: "2025-10-30T15:30:00", completed: 2, total: 5 },
     { id: 2, title: "Database Optimization", type: "Backend Task", deadline: "2025-10-28T12:00:00", completed: 4, total: 4 },
