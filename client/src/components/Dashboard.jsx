@@ -47,7 +47,6 @@ const Dashboard = () => {
 
   return (
     <div className="dashboard-container">
-
       <Sidebar />
       <div className="divider"></div>
       <main className="main-body">
