@@ -11,7 +11,6 @@
   display: flex;
   height: 100vh;
   width: 100vw;
-  /* overflow: hidden; */
 }
 
 .signin-left {
@@ -123,6 +122,31 @@
 
 .signin-btn:hover {
   background-color: #009d9d;
+}
+
+.google-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: #ffffff;
+  color: #444;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.google-btn:hover {
+  background: #009d9d;
+  border-color: #ccc;
+  color: white;
+}
+
+.google-btn:active {
+  transform: scale(0.97);
 }
 
 .signup-text {

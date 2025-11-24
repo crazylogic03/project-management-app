@@ -1,0 +1,99 @@
+.taskdetail-wrapper {
+    display: flex;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.taskdetail-main {
+    position: absolute;
+    left: 300px;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: calc(100% - 300px);
+    height: 100vh;
+    overflow-y: auto;
+    padding: 30px 40px;
+    background: #fff;
+}
+
+.taskdetail-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.taskdetail-header h1 {
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.taskdetail-title {
+  margin-top: 25px;
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.taskdetail-table {
+  margin-top: 30px;
+  width: 100%;
+  border: 1px solid #eee;
+  border-radius: 12px;
+  padding: 10px 0;
+}
+
+.table-header,
+.table-row {
+  display: grid;
+  grid-template-columns: 2fr 2fr 1fr 1fr;
+  padding: 16px 25px;
+  align-items: center;
+}
+
+.table-header {
+  font-size: 14px;
+  font-weight: 600;
+  color: #666;
+  border-bottom: 1px solid #eee;
+}
+
+.table-row {
+  border-bottom: 1px solid #f3f3f3;
+  font-size: 15px;
+}
+
+.table-row:last-child {
+  border-bottom: none;
+}
+
+.task-name {
+  font-weight: 500;
+}
+
+.assignee {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.assignee img {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+}
+
+.status-tag {
+  background-color: #00ffff73;
+  color: #009688;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  width: fit-content;
+}
+
+.updated {
+  font-size: 14px;
+  color: #666;
+}

@@ -39,19 +39,19 @@
 .signup-title {
   margin-top: 50px;
   color: #00b9b9;
-  font-size: 2.5rem;
+  font-size: 3rem;
 }
 
 .signup-subtitle {
   color: #333;
   font-size: 15px;
   font-weight: normal;
-  margin-bottom: 30px;
+  margin-bottom: 2rem;
 }
 
 .signup-form {
   width: 60%;
-  height: 100%;
+  height: 60%;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -79,7 +79,7 @@
 }
 
 .signup-btn {
-  margin-top: 1.5rem;
+  margin-top: 1rem;
   padding: 8px 0;
   width: 130px;
   background-color: #00b9b9;
@@ -97,27 +97,33 @@
 }
 
 .google-btn {
-  margin-top: 1rem;
-  padding: 10px 0;
-  background-color: white;
-  border: 1px solid #ccc;
-  border-radius: 25px;
-  font-size: 0.95rem;
-  color: #444;
-  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 10px;
-  transition: all 0.3s ease;
+  margin-top: 0.6rem;
+  background: #ffffff;
+  color: #444;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.25s ease;
 }
 
 .google-btn:hover {
-  background-color: #f8f8f8;
-  border-color: #aaa;
+  background: #009d9d;
+  border-color: #ccc;
+  color: white;
+}
+
+.google-btn:active {
+  transform: scale(0.97);
 }
 
 .signin-text {
+  margin-top: 4rem;
   font-size: 1rem;
   color: #333;
   position: relative;
