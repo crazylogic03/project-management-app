@@ -30,6 +30,8 @@ const SignupPage = () => {
 
       if (res.ok) {
         localStorage.setItem("token", data.token);
+        localStorage.setItem("user", JSON.stringify(data.user));
+
         alert("✅ Signup successful!");
         navigate("/dashboard");
       } else {

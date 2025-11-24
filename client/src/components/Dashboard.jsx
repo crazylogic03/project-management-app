@@ -1,9 +1,42 @@
 import React, { useEffect, useState } from "react";
 import Sidebar from "./Sidebar";
-import { Settings, Bell } from "lucide-react";
+import { Settings, Bell, LogOut } from "lucide-react";
 import "../styles/Dashboard.css";
+import { useNavigate } from "react-router-dom";
 
 const Dashboard = () => {
+  const navigate = useNavigate();
+  const [user, setUser] = useState(null);
+
+  // -------------------------------
+  // 1️⃣ LOAD USER FROM LOCALSTORAGE FIRST
+  // -------------------------------
+  useEffect(() => {
+    const savedUser = localStorage.getItem("user");
+
+    if (savedUser) {
+      setUser(JSON.parse(savedUser));
+    } else {
+      // If no user stored → redirect to login
+      navigate("/login");
+    }
+  }, [navigate]);
+
+  // -------------------------------
+  // 2️⃣ LOGOUT HANDLER
+  // -------------------------------
+  const handleLogout = async () => {
+    localStorage.removeItem("user");  // manual login + google login both use this
+    localStorage.removeItem("token");
+
+    await fetch("http://localhost:3000/api/users/logout", { credentials: "include" });
+
+    navigate("/login");
+  };
+
+  // -------------------------------
+  // Dummy Tasks (your original code)
+  // -------------------------------
   const [tasks, setTasks] = useState([
     { id: 1, title: "Design Landing Page", type: "UI/UX Design", deadline: "2025-10-30T15:30:00", completed: 2, total: 5 },
     { id: 2, title: "Database Optimization", type: "Backend Task", deadline: "2025-10-28T12:00:00", completed: 4, total: 4 },
@@ -18,6 +51,7 @@ const Dashboard = () => {
     { id: 3, text: "Team meeting scheduled for Friday", time: "1d ago" },
   ];
 
+  // Timer logic
   useEffect(() => {
     const interval = setInterval(() => {
       const now = new Date().getTime();
@@ -47,26 +81,47 @@ const Dashboard = () => {
 
   return (
     <div className="dashboard-container">
+      {/* LEFT SIDEBAR */}
       <Sidebar />
+
       <div className="divider"></div>
+
+      {/* MAIN BODY */}
       <main className="main-body">
         <div className="dashboard-top">
           <div className="top-right">
             <div className="icon"><Settings size={18} /></div>
             <div className="icon"><Bell size={18} /></div>
-            <div className="profile">
-              <span>David Muller</span>
-              <img src="https://i.pravatar.cc/40" alt="" />
-            </div>
+
+            {/* USER PROFILE + LOGOUT */}
+            {user && (
+              <div className="profile">
+                {/* Profile Picture Priority: Google Pic → First Letter */}
+                {user.profilePic ? (
+                  <img src={user.profilePic} alt="Profile" />
+                ) : (
+                  <div className="profile-initial">
+                    {user.name?.charAt(0).toUpperCase() || "U"}
+                  </div>
+                )}
+
+                <span>{user.name || user.email}</span>
+
+                <button className="logout-btn" onClick={handleLogout}>
+                  <LogOut size={18} />
+                </button>
+              </div>
+            )}
           </div>
         </div>
 
         <div className="divider1"></div>
 
+        {/* HEADER */}
         <header className="dashboard-header">
-          <h1>Welcome back, David!</h1>
+          <h1>Welcome back, {user?.name?.split(" ")[0] || "there"}!</h1>
           <p>
-            Here’s what’s happening today,{" "}
+            Here’s what’s happening today —{" "}
             {new Date().toLocaleDateString("en-US", {
               weekday: "long",
               month: "long",
@@ -106,9 +161,7 @@ const Dashboard = () => {
                   Deadline: {new Date(task.deadline).toLocaleString()}
                 </p>
 
-                <div className="countdown">
-                  ⏰ {countdowns[task.id] || "Loading..."}
-                </div>
+                <div className="countdown">⏰ {countdowns[task.id] || "Loading..."}</div>
 
                 <div className="progress-container">
                   <div className="progress-info">
@@ -130,6 +183,7 @@ const Dashboard = () => {
         </section>
       </main>
 
+      {/* RIGHT SIDEBAR */}
       <aside className="right-panel">
         <div className="widget-card">
           <h3>Recent Updates</h3>
@@ -159,9 +213,7 @@ const Dashboard = () => {
           </div>
 
           <div className="total-progress-card">
-            <div className="progress-info">
-              <h2>Total progress</h2>
-            </div>
+            <h2>Total progress</h2>
             <span className="percent">+7%</span>
           </div>
 
@@ -193,9 +245,7 @@ const Dashboard = () => {
             </p>
           </div>
         </div>
-
       </aside>
-
     </div>
   );
 };
