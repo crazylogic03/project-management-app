@@ -10,17 +10,17 @@ const Sidebar = () => {
     <aside className="left-panel">
       <h2 className="site-name">Project Manager</h2>
       <nav className="sidebar-nav">
-        <NavLink to="/dashboard"><Home size={20}/> Dashboard</NavLink>
-        <NavLink to="/projects"><FolderKanban size={20}/> Projects</NavLink>
-        <NavLink to="/project-detail"><FileText size={20}/> Project Detail</NavLink>
-        <NavLink to="/task-detail"><CheckSquare size={20}/> Task Detail</NavLink>
-        <NavLink to="/calendar"><CalendarDays size={20}/> Calendar</NavLink>
-        <a><BarChart3 size={20}/> Reports</a>
-        <a><FileStack size={20}/> Files</a>
+        <NavLink to="/dashboard"><Home size={20} /> Dashboard</NavLink>
+        <NavLink to="/projects"><FolderKanban size={20} /> Projects</NavLink>
+        <NavLink to="/project-detail"><FileText size={20} /> Project Detail</NavLink>
+        <NavLink to="/task-detail"><CheckSquare size={20} /> Task Detail</NavLink>
+        <NavLink to="/calendar"><CalendarDays size={20} /> Calendar</NavLink>
+        <a><BarChart3 size={20} /> Reports</a>
+        <a><FileStack size={20} /> Files</a>
       </nav>
 
       <div className="sidebar-footer">
-        <a><HelpCircle size={20}/> Help</a>
+        <a><HelpCircle size={20} /> Help</a>
       </div>
     </aside>
   );

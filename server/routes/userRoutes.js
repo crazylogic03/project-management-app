@@ -10,17 +10,18 @@ const router = express.Router();
 router.post("/signup", signup);
 router.post("/login", signin);
 
-
 router.get("/me", async (req, res) => {
   try {
     if (req.user) {
       return res.json(req.user);
     }
+
     const token = req.headers.authorization?.split(" ")[1];
     if (!token) return res.status(401).json({ message: "No token provided" });
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET || "supersecretkey");
     const user = await prisma.user.findUnique({ where: { id: decoded.id } });
+
     if (!user) return res.status(404).json({ message: "User not found" });
 
     res.json(user);
@@ -30,7 +31,6 @@ router.get("/me", async (req, res) => {
   }
 });
 
-
 router.get(
   "/google",
   passport.authenticate("google", { scope: ["profile", "email"] })
@@ -38,14 +38,22 @@ router.get(
 
 router.get(
   "/google/callback",
-  passport.authenticate("google", {
-    failureRedirect: "http://localhost:5173/login",
-    successRedirect: "http://localhost:5173/dashboard?google=true",
-  })
+  passport.authenticate("google", { failureRedirect: "http://localhost:5173/login" }),
+  (req, res) => {
+    const userData = JSON.stringify({
+      id: req.user.id,
+      name: req.user.name,
+      email: req.user.email,
+      profilePic: req.user.profilePic,
+    });
+
+    const encoded = encodeURIComponent(userData);
+
+    res.redirect(`http://localhost:5173/dashboard?user=${encoded}`);
+  }
 );
 
-
-
+// LOGOUT
 router.get("/logout", (req, res) => {
   req.logout(() => {
     res.clearCookie("connect.sid");

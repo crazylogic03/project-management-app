@@ -10,28 +10,40 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
+        const params = new URLSearchParams(window.location.search);
+        const urlUser = params.get("user");
+
+        // 1️⃣ When coming from Google callback
+        if (urlUser) {
+          const decoded = JSON.parse(decodeURIComponent(urlUser));
+          localStorage.setItem("user", JSON.stringify(decoded));
+          localStorage.setItem("googleLogin", "true");
+          setUser(decoded);
+          return;
+        }
+
+        // 2️⃣ If user previously logged in with Google
+        const googleFlag = localStorage.getItem("googleLogin");
+        const savedUser = localStorage.getItem("user");
+
+        if (googleFlag && savedUser) {
+          setUser(JSON.parse(savedUser));
+          return;
+        }
+
+        // 3️⃣ Manual login using token
         const token = localStorage.getItem("token");
+        if (!token) return navigate("/login");
 
-        let res;
-
-        if (window.location.search.includes("google=true")) {
-          res = await fetch("http://localhost:3000/api/users/me", { credentials: "include" });
-        }
-        else if (token) {
-          res = await fetch("http://localhost:3000/api/users/me", {
-            headers: { Authorization: `Bearer ${token}` },
-          });
-        }
-        else {
-          return navigate("/login");
-        }
+        const res = await fetch("http://localhost:3000/api/users/me", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
 
         if (!res.ok) return navigate("/login");
 
         const userData = await res.json();
-        setUser(userData);
-
         localStorage.setItem("user", JSON.stringify(userData));
+        setUser(userData);
 
       } catch (err) {
         console.error(err);
@@ -40,7 +52,8 @@ const Dashboard = () => {
     };
 
     fetchUser();
-  }, []);
+  }, [navigate]);
+
 
 
   const handleLogout = async () => {
