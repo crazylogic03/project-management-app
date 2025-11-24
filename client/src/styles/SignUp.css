@@ -38,18 +38,18 @@
 
 .signup-title {
   color: #00b9b9;
-  font-size: 2rem;
+  font-size: 3rem;
 }
 
 .signup-subtitle {
   color: #333;
-  font-size: 12px;
+  font-size: 15px;
   font-weight: normal;
-  margin-bottom: 1.5rem;
+  margin-bottom: 2rem;
 }
 
 .signup-form {
-  width: 50%;
+  width: 60%;
   height: 60%;
   display: flex;
   flex-direction: column;
@@ -78,7 +78,7 @@
 }
 
 .signup-btn {
-  margin-top: 0.5rem;
+  margin-top: 1rem;
   padding: 8px 0;
   width: 130px;
   background-color: #00b9b9;
@@ -95,25 +95,34 @@
   background-color: #009d9d;
 }
 
-/* .google-auth-icon {
+.google-btn {
   display: flex;
+  align-items: center;
   justify-content: center;
-  margin-top: 15px;
+  gap: 10px;
+  margin-top: 0.6rem;
+  background: #ffffff;
+  color: #444;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 500;
   cursor: pointer;
+  transition: all 0.25s ease;
 }
 
-.google-auth-icon img {
-  width: 35px;
-  height: 35px;
-  transition: transform 0.2s ease;
+.google-btn:hover {
+  background: #009d9d;
+  border-color: #ccc;
+  color: white;
 }
 
-.google-auth-icon img:hover {
-  transform: scale(1.1);
-} */
+.google-btn:active {
+  transform: scale(0.97);
+}
 
 .signin-text {
-  margin-top: 1rem;
+  margin-top: 4rem;
   font-size: 1rem;
   color: #333;
 }

@@ -68,6 +68,11 @@ const SignInPage = () => {
             className="google-btn"
             onClick={handleGoogleLogin}
           >
+            <img
+              src="https://www.svgrepo.com/show/475656/google-color.svg"
+              alt="google"
+              style={{ width: 20, height: 20 }}
+            />
             Sign in with Google
           </button>
         </form>

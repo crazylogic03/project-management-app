@@ -73,6 +73,11 @@ const SignupPage = () => {
             className="google-btn"
             onClick={() => window.open("http://localhost:3000/api/users/google", "_self")}
           >
+            <img
+              src="https://www.svgrepo.com/show/475656/google-color.svg"
+              alt="google"
+              style={{ width: 20, height: 20 }}
+            />
             Sign up with Google
           </button>
         </form>
