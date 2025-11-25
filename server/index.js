@@ -6,6 +6,8 @@ const session = require("express-session")
 require("./passport");
 
 const userRoutes = require("./routes/userRoutes.js")
+const boardRoutes = require("./routes/boards.js");
+
 
 dotenv.config();
 
@@ -33,8 +35,11 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 
+
 // Routes
 app.use("/api/users", userRoutes);
+app.use("/api/boards", boardRoutes);
+
 
 app.get("/", (req, res) => {
   res.send("✅ Server running and connected to MySQL");

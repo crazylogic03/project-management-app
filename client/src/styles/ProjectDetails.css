@@ -34,7 +34,7 @@
     background: #ffffff;
     padding: 22px;
     border-radius: 18px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
     display: flex;
     gap: 14px;
     align-items: center;
@@ -87,7 +87,7 @@
     background: #ffffff;
     padding: 18px;
     border-radius: 18px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 .kanban-column h3 {

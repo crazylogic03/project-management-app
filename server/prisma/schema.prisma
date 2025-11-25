@@ -8,37 +8,45 @@ generator client {
   provider = "prisma-client-js"
 }
 
-
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
 }
+
 model User {
-  id          Int        @id @default(autoincrement())
+  id          Int           @id @default(autoincrement())
   name        String
-  email       String     @unique
-  password    String?     
-  googleId    String?    @unique
+  email       String        @unique
+  password    String?
+  googleId    String?       @unique
   profilePic  String?
-  boards      Board[]    @relation("BoardOwner")
+  boards      Board[]       @relation("BoardOwner")
   memberships BoardMember[]
   comments    Comment[]
   activities  Activity[]
-  createdAt   DateTime   @default(now())
+  createdAt   DateTime      @default(now())
 }
 
-
 model Board {
-  id          Int          @id @default(autoincrement())
-  title       String
-  description String?
-  createdBy   Int
-  owner       User         @relation("BoardOwner", fields: [createdBy], references: [id])
-  lists       List[]
-  members     BoardMember[]
-  activities  Activity[]
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
+  id           Int           @id @default(autoincrement())
+  title        String
+  description  String?
+  organization String?
+  createdBy    Int
+  createdAt    DateTime      @default(now())
+  deadline     DateTime?
+  progress     Int           @default(0)
+  status       String        @default("Not Started")
+  template     String?
+  owner        User          @relation("BoardOwner", fields: [createdBy], references: [id])
+  members      BoardMember[]
+  lists        List[]
+  activities   Activity[]
+  comments     Comment[]
+  labels       Label[]
+  attachments  Attachment[]
+  cards        Card[]
+  color String? 
 }
 
 model BoardMember {
@@ -50,13 +58,13 @@ model BoardMember {
   board     Board    @relation(fields: [boardId], references: [id])
   createdAt DateTime @default(now())
 
-  @@unique([userId, boardId]) 
+  @@unique([userId, boardId])
 }
 
 model List {
   id        Int      @id @default(autoincrement())
   title     String
-  position  Int
+  order     Int      @default(0)
   boardId   Int
   board     Board    @relation(fields: [boardId], references: [id])
   cards     Card[]
@@ -68,46 +76,68 @@ model Card {
   id          Int          @id @default(autoincrement())
   title       String
   description String?
-  priority    String?     
   dueDate     DateTime?
+  priority    String?
+  order       Int          @default(0)
   listId      Int
   list        List         @relation(fields: [listId], references: [id])
+  boardId     Int
+  board       Board        @relation(fields: [boardId], references: [id])
   comments    Comment[]
+  labels      CardLabel[]
   attachments Attachment[]
-  activities  Activity[]
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
+  activity    Activity[]
 }
 
 model Comment {
   id        Int      @id @default(autoincrement())
   content   String
-  cardId    Int
+  createdAt DateTime @default(now())
   userId    Int
-  card      Card     @relation(fields: [cardId], references: [id])
   user      User     @relation(fields: [userId], references: [id])
-  createdAt DateTime @default(now())
-}
-
-model Attachment {
-  id        Int      @id @default(autoincrement())
-  fileUrl   String
-  fileType  String?
-  cardId    Int
-  card      Card     @relation(fields: [cardId], references: [id])
-  createdAt DateTime @default(now())
+  boardId   Int
+  board     Board    @relation(fields: [boardId], references: [id])
+  cardId    Int?
+  card      Card?    @relation(fields: [cardId], references: [id])
 }
 
 model Activity {
   id        Int      @id @default(autoincrement())
-  action    String   
+  action    String
   userId    Int
   boardId   Int
   cardId    Int?
+  createdAt DateTime @default(now())
   user      User     @relation(fields: [userId], references: [id])
   board     Board    @relation(fields: [boardId], references: [id])
   card      Card?    @relation(fields: [cardId], references: [id])
-  createdAt DateTime @default(now())
 }
 
+model Label {
+  id      Int         @id @default(autoincrement())
+  name    String
+  color   String
+  boardId Int
+  board   Board       @relation(fields: [boardId], references: [id])
+  cards   CardLabel[]
+}
 
+model CardLabel {
+  id      Int   @id @default(autoincrement())
+  cardId  Int
+  labelId Int
+  card    Card  @relation(fields: [cardId], references: [id])
+  label   Label @relation(fields: [labelId], references: [id])
+}
+
+model Attachment {
+  id        Int      @id @default(autoincrement())
+  url       String
+  fileName  String
+  fileType  String
+  createdAt DateTime @default(now())
+  boardId   Int
+  board     Board    @relation(fields: [boardId], references: [id])
+  cardId    Int?
+  card      Card?    @relation(fields: [cardId], references: [id])
+}
