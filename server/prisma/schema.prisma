@@ -20,6 +20,12 @@ model User {
   password    String?     
   googleId    String?    @unique
   profilePic  String?
+  phone       String?
+  country     String?
+  city        String?
+  zipCode     String?
+  notifications Json?
+  preferences   Json?
   boards      Board[]    @relation("BoardOwner")
   memberships BoardMember[]
   comments    Comment[]

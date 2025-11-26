@@ -118,7 +118,9 @@ const Dashboard = () => {
       <main className="main-body">
         <div className="dashboard-top">
           <div className="top-right">
-            <div className="icon"><Settings size={18} /></div>
+            <button aria-label="Open settings" className="icon icon-btn" onClick={() => navigate('/settings')}>
+              <Settings size={18} />
+            </button>
             <div className="icon"><Bell size={18} /></div>
 
             {/* USER PROFILE + LOGOUT */}
