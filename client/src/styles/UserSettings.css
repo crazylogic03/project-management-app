@@ -456,3 +456,58 @@ body.dark-mode .sidebar-nav a.active {
   color: var(--accent);
   background: rgba(0, 150, 136, 0.1);
 }
+
+/* User Settings Dark Mode Specifics */
+body.dark-mode .settings-card,
+body.dark-mode .settings-sub-card,
+body.dark-mode .us-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+body.dark-mode .settings-input,
+body.dark-mode select {
+  background: #333;
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+}
+
+body.dark-mode .settings-input:focus,
+body.dark-mode select:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(0, 150, 136, 0.2);
+}
+
+body.dark-mode .settings-avatar {
+  background: #333;
+  color: var(--text-secondary);
+  border: 1px solid var(--border-color);
+}
+
+body.dark-mode .readonly-badge {
+  background: #333;
+  color: var(--text-secondary);
+  border: 1px solid var(--border-color);
+}
+
+body.dark-mode .notification-item {
+  border-bottom: 1px solid var(--border-color);
+}
+
+body.dark-mode .toggle-switch .slider {
+  background-color: #555;
+}
+
+body.dark-mode input:checked+.slider {
+  background-color: var(--accent);
+}
+
+body.dark-mode .danger-zone {
+  border-color: #ef4444;
+  /* Keep danger color */
+}
+
+body.dark-mode .danger-zone h3 {
+  color: #ef4444;
+}

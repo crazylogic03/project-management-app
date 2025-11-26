@@ -2,7 +2,7 @@ import { NavLink } from "react-router-dom";
 import "../styles/Sidebar.css";
 import {
   Home, FolderKanban, FileText, CheckSquare,
-  CalendarDays, BarChart3, FileStack, HelpCircle
+  CalendarDays, BarChart3, FileStack, HelpCircle, Settings
 } from "lucide-react";
 
 const Sidebar = () => {
@@ -16,6 +16,7 @@ const Sidebar = () => {
         <NavLink to="/calendar"><CalendarDays size={20} /> Calendar</NavLink>
         <a><BarChart3 size={20} /> Reports</a>
         <a><FileStack size={20} /> Files</a>
+        <NavLink to="/settings"><Settings size={20} /> Settings</NavLink>
       </nav>
 
       <div className="sidebar-footer">
