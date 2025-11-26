@@ -2,9 +2,13 @@ import React, { useState, useEffect, useRef } from "react";
 import Sidebar from "./Sidebar";
 import "../styles/Projects.css";
 import { CalendarDays, Users, Plus } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+
 
 const Projects = () => {
+  const navigate = useNavigate();
+
+  const [projects, setProjects] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [dropdownPos, setDropdownPos] = useState({ top: 0, left: 0 });
@@ -16,48 +20,49 @@ const Projects = () => {
     { bg: "#edf4ef", border: "#b4ccb9" },
   ];
 
-  const [projects, setProjects] = useState([
-    {
-      id: 1,
-      name: "E-commerce Website",
-      deadline: "2025-10-30",
-      members: 5,
-      progress: 58,
-      description: "",
-      status: "In Progress",
-      ...projectColors[0],
-    },
-    {
-      id: 2,
-      name: "Mobile App UI",
-      deadline: "2025-11-12",
-      members: 3,
-      progress: 72,
-      description: "",
-      status: "In Progress",
-      ...projectColors[1],
-    },
-    {
-      id: 3,
-      name: "Marketing Dashboard",
-      deadline: "2025-12-05",
-      members: 4,
-      progress: 40,
-      description: "",
-      status: "Not Started",
-      ...projectColors[2],
-    },
-  ]);
 
   const [formData, setFormData] = useState({
     name: "",
     deadline: "",
-    members: 1,
     progress: 0,
     description: "",
     status: "Not Started",
     template: "",
+    color: "",
+    organization: "",
   });
+
+  useEffect(() => {
+    const loadBoards = async () => {
+      const user = JSON.parse(localStorage.getItem("user"));
+      if (!user) return navigate("/login");
+      try {
+        const res = await fetch(
+          `http://localhost:3000/api/boards?userId=${user.id}`
+        );
+
+        const data = await res.json();
+        const mapped = data.map((b, index) => {
+          const color = projectColors[index % 3];
+          return {
+            id: b.id,
+            name: b.title,
+            deadline: b.deadline,
+            description: b.description,
+            progress: b.progress,
+            members: b.members?.length || 1,
+            status: b.status,
+            ...color,
+          };
+        });
+        setProjects(mapped);
+      } catch (err) {
+        console.error("Error loading boards:", err);
+      }
+    };
+    loadBoards();
+  }, [navigate]);
+
 
   useEffect(() => {
     const close = (e) => {
@@ -72,6 +77,8 @@ const Projects = () => {
     document.addEventListener("click", close);
     return () => document.removeEventListener("click", close);
   }, []);
+
+
 
   const openDropdownAt = (e) => {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -88,30 +95,61 @@ const Projects = () => {
     setShowModal(true);
   };
 
-  const createProject = () => {
-    if (!formData.name || !formData.deadline) return alert("Fill name & deadline!");
+  const createProject = async () => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (!user) return navigate("/login");
+    if (!formData.name || !formData.deadline)
+      return alert("Project Name & Deadline required!");
+    try {
+      const res = await fetch("http://localhost:3000/api/boards", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title: formData.name,
+          description: formData.description,
+          deadline: formData.deadline,
+          progress: Number(formData.progress),
+          status: formData.status,
+          template: formData.template,
+          organization: formData.organization,
+          userId: user.id,
+        }),
+      });
 
-    const index = projects.length % 3;
-    const newColor = projectColors[index];
+      const newBoard = await res.json();
 
-    const newProject = {
-      id: Date.now(),
-      ...formData,
-      ...newColor,
-    };
+      const index = projects.length % 3;
+      const newColor = projectColors[index];
 
-    setProjects([...projects, newProject]);
-    setShowModal(false);
+      setProjects([
+        ...projects,
+        {
+          id: newBoard.id,
+          name: newBoard.title,
+          deadline: newBoard.deadline,
+          progress: newBoard.progress,
+          description: newBoard.description,
+          members: 1,
+          status: newBoard.status,
+          ...newColor,
+        },
+      ]);
 
-    setFormData({
-      name: "",
-      deadline: "",
-      members: 1,
-      progress: 0,
-      description: "",
-      status: "Not Started",
-      template: "",
-    });
+      setShowModal(false);
+      setFormData({
+        name: "",
+        deadline: "",
+        progress: 0,
+        description: "",
+        status: "Not Started",
+        template: "",
+        color: "",
+        organization: "",
+      });
+    } catch (err) {
+      console.error("Create project error:", err);
+      alert("Failed to create project");
+    }
   };
 
   return (
@@ -169,14 +207,6 @@ const Projects = () => {
                 type="date"
                 value={formData.deadline}
                 onChange={(e) => setFormData({ ...formData, deadline: e.target.value })}
-              />
-
-              <label>Members</label>
-              <input
-                type="number"
-                min="1"
-                value={formData.members}
-                onChange={(e) => setFormData({ ...formData, members: e.target.value })}
               />
 
               <label>Progress</label>
@@ -258,12 +288,13 @@ const Projects = () => {
               </div>
 
               <Link
-                to="/project-detail"
+                to={`/project-detail/${project.id}`}
                 className="details-btn"
                 style={{ backgroundColor: project.border }}
               >
                 View Project →
               </Link>
+
             </div>
           ))}
         </div>
