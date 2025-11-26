@@ -13,7 +13,6 @@ import { ThemeProvider } from "./context/ThemeContext";
 
 function App() {
   return (
-
     <ThemeProvider>
       <BrowserRouter>
         <Routes>
@@ -24,29 +23,14 @@ function App() {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/projects" element={<Projects />} />
-          <Route path="/project-detail" element={<ProjectDetail />} />
+          <Route path="/project-detail/:id" element={<ProjectDetail />} />
           <Route path="/task-detail" element={<TaskDetails />} />
           <Route path="/calendar" element={<Calendar />} />
+          <Route path="*" element={<Navigate to="/signup" />} />
+
         </Routes>
       </BrowserRouter>
     </ThemeProvider>
-
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Navigate to="/signup" />} />
-        <Route path="/signup" element={<SignupPage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/settings" element={<Settings />} />
-        <Route path="/projects" element={<Projects />} />
-        <Route path="/project-detail/:id" element={<ProjectDetail />} />
-
-        <Route path="/task-detail" element={<TaskDetails />} />
-        <Route path="/calendar" element={<Calendar />} />
-      </Routes>
-    </BrowserRouter>
-
   );
 }
 

@@ -104,8 +104,9 @@ router.get("/:id", async (req, res) => {
 
 router.post("/", async (req, res) => {
     try {
-        const { title, description, userId, deadline, progress, status, template, organization, color } = req.body;
+        const { title, description, userId, deadline, progress, status, template, organization } = req.body;
 
+        // 1️⃣ Create board
         const board = await prisma.board.create({
             data: {
                 title,
@@ -115,15 +116,40 @@ router.post("/", async (req, res) => {
                 progress: progress ?? 0,
                 status: status || "Not Started",
                 template,
-                color,
                 createdBy: Number(userId),
                 members: {
-                    create: { userId: Number(userId), role: "owner" }
-                }
-            }
+                    create: { userId: Number(userId), role: "owner" },
+                },
+            },
         });
 
-        res.status(201).json(board);
+        // 2️⃣ Create default lists
+        const defaultLists = [
+            { title: "To Do", order: 1 },
+            { title: "In Progress", order: 2 },
+            { title: "Done", order: 3 },
+        ];
+
+        for (const list of defaultLists) {
+            await prisma.list.create({
+                data: {
+                    title: list.title,
+                    order: list.order,
+                    boardId: board.id,
+                },
+            });
+        }
+
+        const fullBoard = await prisma.board.findUnique({
+            where: { id: board.id },
+            include: {
+                lists: {
+                    include: { cards: true },
+                },
+            },
+        });
+
+        res.status(201).json(fullBoard);
     } catch (err) {
         console.error("Error creating board:", err);
         res.status(500).json({ message: "Failed to create board" });
@@ -132,22 +158,24 @@ router.post("/", async (req, res) => {
 
 
 
+
+
 /*UPadte*/
 router.put("/:id", async (req, res) => {
     try {
-        const boardId = NUmber(req.params.id)
-        const upadted = await prisma.board.update({
+        const boardId = Number(req.params.id);
+        const updated = await prisma.board.update({
             where: { id: boardId },
             data: req.body
-        })
-        res.json(upadted)
-    }
-    catch (err) {
+        });
+
+        res.json(updated);
+    } catch (err) {
         console.error("PUT /boards/:id error:", err);
         res.status(500).json({ message: "Failed to update board" });
-
     }
-})
+});
+
 
 //delete
 router.delete("/:id", async (req, res) => {
