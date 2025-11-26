@@ -27,7 +27,6 @@ export default function SettingsPage() {
 	const [preferences, setPreferences] = useState({
 		language: "English",
 		timezone: "UTC-5",
-		darkMode: false,
 		theme: "Default"
 	});
 
@@ -167,14 +166,14 @@ export default function SettingsPage() {
 		navigate("/login");
 	};
 
-	// Apply dark mode
-	React.useEffect(() => {
-		if (preferences.darkMode) {
-			document.body.classList.add('dark-mode');
-		} else {
-			document.body.classList.remove('dark-mode');
-		}
-	}, [preferences.darkMode]);
+	// Apply dark mode - REMOVED (Handled globally now)
+	// React.useEffect(() => {
+	// 	if (preferences.darkMode) {
+	// 		document.body.classList.add('dark-mode');
+	// 	} else {
+	// 		document.body.classList.remove('dark-mode');
+	// 	}
+	// }, [preferences.darkMode]);
 
 	return (
 		<div className="dashboard-container">
@@ -188,19 +187,6 @@ export default function SettingsPage() {
 						<p style={{ color: '#666' }}>Manage your account settings and preferences.</p>
 					</div>
 					<div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
-						<div className="dark-mode-toggle-header" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-							<Moon size={18} />
-							<span style={{ fontSize: '14px', fontWeight: 500 }}>Dark Mode</span>
-							<label className="toggle-switch">
-								<input
-									type="checkbox"
-									name="darkMode"
-									checked={preferences.darkMode}
-									onChange={handlePreferenceChange}
-								/>
-								<span className="slider"></span>
-							</label>
-						</div>
 						<button onClick={handleLogout} className="btn secondary" style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 16px' }}>
 							<LogOut size={16} /> Sign Out
 						</button>

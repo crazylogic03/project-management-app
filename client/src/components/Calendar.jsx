@@ -209,7 +209,7 @@ const Calendar = () => {
     return (
         <div className="dashboard-container">
             <Sidebar />
-            <main className="main-body" style={{ width: '100%', height: '100vh', display: 'flex', flexDirection: 'column', padding: '30px', overflow: 'hidden' }}>
+            <main className="main-body" style={{ flex: 1, height: '100vh', display: 'flex', flexDirection: 'column', padding: '30px', overflow: 'hidden' }}>
                 <div className="calendar-page">
 
                     {/* Header */}

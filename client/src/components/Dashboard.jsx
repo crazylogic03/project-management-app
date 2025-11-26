@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import Sidebar from "./Sidebar";
-import { Settings, Bell, LogOut } from "lucide-react";
+import { Settings, Bell, LogOut, Moon } from "lucide-react";
 import "../styles/Dashboard.css";
 import { useNavigate } from "react-router-dom";
+import { useTheme } from "../context/ThemeContext";
 
 const Dashboard = () => {
   const navigate = useNavigate();
+  const { darkMode, toggleTheme } = useTheme();
   const [user, setUser] = useState(null);
   useEffect(() => {
     const fetchUser = async () => {
@@ -118,8 +120,16 @@ const Dashboard = () => {
       <main className="main-body">
         <div className="dashboard-top">
           <div className="top-right">
-            <button aria-label="Open settings" className="icon icon-btn" onClick={() => navigate('/settings')}>
-              <Settings size={18} />
+            <button
+              className="icon icon-btn"
+              onClick={toggleTheme}
+              title="Toggle Dark Mode"
+              style={{
+                color: darkMode ? '#009688' : 'inherit',
+                transition: 'color 0.3s ease'
+              }}
+            >
+              <Moon size={20} fill={darkMode ? "currentColor" : "none"} />
             </button>
             <div className="icon"><Bell size={18} /></div>
 

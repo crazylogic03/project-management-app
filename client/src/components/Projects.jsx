@@ -3,17 +3,19 @@ import Sidebar from "./Sidebar";
 import "../styles/Projects.css";
 import { CalendarDays, Users, Plus } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useTheme } from "../context/ThemeContext";
 
 const Projects = () => {
+  const { darkMode } = useTheme();
   const [showDropdown, setShowDropdown] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [dropdownPos, setDropdownPos] = useState({ top: 0, left: 0 });
   const dropdownRef = useRef(null);
 
   const projectColors = [
-    { bg: "#ccfafa", border: "#00b9b9" },
-    { bg: "#e5f0ff", border: "#7aaff5" },
-    { bg: "#edf4ef", border: "#b4ccb9" },
+    { bg: "#ccfafa", darkBg: "rgba(0, 185, 185, 0.15)", border: "#00b9b9" },
+    { bg: "#e5f0ff", darkBg: "rgba(122, 175, 245, 0.15)", border: "#7aaff5" },
+    { bg: "#edf4ef", darkBg: "rgba(180, 204, 185, 0.15)", border: "#b4ccb9" },
   ];
 
   const [projects, setProjects] = useState([
@@ -226,7 +228,7 @@ const Projects = () => {
               key={project.id}
               className="project-card"
               style={{
-                backgroundColor: project.bg,
+                backgroundColor: darkMode ? project.darkBg : project.bg,
                 borderLeft: `6px solid ${project.border}`,
               }}
             >
