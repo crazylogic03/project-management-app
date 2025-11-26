@@ -8,6 +8,7 @@ import Settings from "./components/Settings";
 import Projects from "./components/Projects";
 import ProjectDetail from "./components/ProjectDetails";
 import TaskDetails from "./components/TaskDetails";
+import Calendar from "./components/Calendar";
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
         <Route path="/projects" element={<Projects />} />
         <Route path="/project-detail" element={<ProjectDetail />} />
         <Route path="/task-detail" element={<TaskDetails />} />
+        <Route path="/calendar" element={<Calendar />} />
       </Routes>
     </BrowserRouter>
   );
