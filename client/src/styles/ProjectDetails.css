@@ -114,6 +114,7 @@
 .kanban-task.done {
     background: #edf4ef;
     border-left: 5px solid #b4ccb9;
+
 }
 
 /* Dark Mode Overrides */
@@ -179,4 +180,6 @@ body.dark-mode .kanban-task.done {
     background: #2A2A2A;
     border-left: 5px solid #10b981;
     opacity: 0.7;
+
+
 }
