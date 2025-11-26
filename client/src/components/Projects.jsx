@@ -4,10 +4,8 @@ import "../styles/Projects.css";
 import { CalendarDays, Users, Plus } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 
-
 const Projects = () => {
   const navigate = useNavigate();
-
   const [projects, setProjects] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
   const [showModal, setShowModal] = useState(false);
@@ -19,7 +17,6 @@ const Projects = () => {
     { bg: "#e5f0ff", border: "#7aaff5" },
     { bg: "#edf4ef", border: "#b4ccb9" },
   ];
-
 
   const [formData, setFormData] = useState({
     name: "",
@@ -36,33 +33,29 @@ const Projects = () => {
     const loadBoards = async () => {
       const user = JSON.parse(localStorage.getItem("user"));
       if (!user) return navigate("/login");
-      try {
-        const res = await fetch(
-          `http://localhost:3000/api/boards?userId=${user.id}`
-        );
 
+      try {
+        const res = await fetch(`http://localhost:3000/api/boards?userId=${user.id}`);
         const data = await res.json();
-        const mapped = data.map((b, index) => {
-          const color = projectColors[index % 3];
-          return {
-            id: b.id,
-            name: b.title,
-            deadline: b.deadline,
-            description: b.description,
-            progress: b.progress,
-            members: b.members?.length || 1,
-            status: b.status,
-            ...color,
-          };
-        });
+
+        const mapped = data.map((b, index) => ({
+          id: b.id,
+          name: b.title,
+          deadline: b.deadline,
+          description: b.description,
+          progress: b.progress,
+          members: b.members?.length || 1,
+          status: b.status,
+          ...projectColors[index % 3],
+        }));
+
         setProjects(mapped);
       } catch (err) {
-        console.error("Error loading boards:", err);
+        console.error(err);
       }
     };
     loadBoards();
   }, [navigate]);
-
 
   useEffect(() => {
     const close = (e) => {
@@ -78,14 +71,9 @@ const Projects = () => {
     return () => document.removeEventListener("click", close);
   }, []);
 
-
-
   const openDropdownAt = (e) => {
     const rect = e.currentTarget.getBoundingClientRect();
-    setDropdownPos({
-      top: rect.bottom + window.scrollY + 6,
-      left: rect.left + window.scrollX,
-    });
+    setDropdownPos({ top: rect.bottom + window.scrollY + 6, left: rect.left + window.scrollX });
     setShowDropdown(true);
   };
 
@@ -98,8 +86,17 @@ const Projects = () => {
   const createProject = async () => {
     const user = JSON.parse(localStorage.getItem("user"));
     if (!user) return navigate("/login");
+
     if (!formData.name || !formData.deadline)
       return alert("Project Name & Deadline required!");
+
+    const mappedStatus =
+      formData.status === "Not Started"
+        ? "NOT_STARTED"
+        : formData.status === "In Progress"
+          ? "IN_PROGRESS"
+          : "COMPLETED";
+
     try {
       const res = await fetch("http://localhost:3000/api/boards", {
         method: "POST",
@@ -109,7 +106,7 @@ const Projects = () => {
           description: formData.description,
           deadline: formData.deadline,
           progress: Number(formData.progress),
-          status: formData.status,
+          status: mappedStatus,
           template: formData.template,
           organization: formData.organization,
           userId: user.id,
@@ -117,6 +114,7 @@ const Projects = () => {
       });
 
       const newBoard = await res.json();
+      if (!res.ok) return alert(newBoard.message || "Failed to create project");
 
       const index = projects.length % 3;
       const newColor = projectColors[index];
@@ -143,11 +141,10 @@ const Projects = () => {
         description: "",
         status: "Not Started",
         template: "",
-        color: "",
         organization: "",
       });
     } catch (err) {
-      console.error("Create project error:", err);
+      console.error(err);
       alert("Failed to create project");
     }
   };
@@ -155,7 +152,10 @@ const Projects = () => {
   return (
     <div className="projects-container">
       <Sidebar />
+
+      {/* ✅ FIX */}
       <main className="projects-main">
+
         <div className="projects-header-new">
           <h1>Projects</h1>
         </div>
@@ -169,23 +169,11 @@ const Projects = () => {
           <div
             ref={dropdownRef}
             className="create-dropdown"
-            style={{
-              top: dropdownPos.top,
-              left: dropdownPos.left,
-              position: "absolute",
-            }}
+            style={{ top: dropdownPos.top, left: dropdownPos.left, position: "absolute" }}
           >
-            <div className="dropdown-item" onClick={() => openCreateModal("Todo Template")}>
-              Todo Template
-            </div>
-
-            <div className="dropdown-item" onClick={() => openCreateModal("Project Template")}>
-              Project Template
-            </div>
-
-            <div className="dropdown-item" onClick={() => openCreateModal("Table")}>
-              Table
-            </div>
+            <div className="dropdown-item" onClick={() => openCreateModal("Todo Template")}>Todo Template</div>
+            <div className="dropdown-item" onClick={() => openCreateModal("Project Template")}>Project Template</div>
+            <div className="dropdown-item" onClick={() => openCreateModal("Table")}>Table</div>
           </div>
         )}
 
@@ -236,13 +224,8 @@ const Projects = () => {
               </select>
 
               <div className="modal-actions">
-                <button className="cancel-btn" onClick={() => setShowModal(false)}>
-                  Cancel
-                </button>
-
-                <button className="create-btn-modal" onClick={createProject}>
-                  Create
-                </button>
+                <button className="cancel-btn" onClick={() => setShowModal(false)}>Cancel</button>
+                <button className="create-btn-modal" onClick={createProject}>Create</button>
               </div>
             </div>
           </div>
@@ -255,24 +238,13 @@ const Projects = () => {
             <div
               key={project.id}
               className="project-card"
-              style={{
-                backgroundColor: project.bg,
-                borderLeft: `6px solid ${project.border}`,
-              }}
+              style={{ backgroundColor: project.bg, borderLeft: `6px solid ${project.border}` }}
             >
-              <div className="project-card-top">
-                <h3>{project.name}</h3>
-              </div>
+              <div className="project-card-top"><h3>{project.name}</h3></div>
 
               <div className="project-info">
-                <p>
-                  <CalendarDays size={16} /> Due:{" "}
-                  {new Date(project.deadline).toLocaleDateString()}
-                </p>
-
-                <p>
-                  <Users size={16} /> {project.members} Members
-                </p>
+                <p><CalendarDays size={16} /> Due: {new Date(project.deadline).toLocaleDateString()}</p>
+                <p><Users size={16} /> {project.members} Members</p>
 
                 <div className="project-progress">
                   <span>Progress</span>
@@ -280,10 +252,7 @@ const Projects = () => {
                 </div>
 
                 <div className="progress-bar-proj">
-                  <div
-                    className="progress-fill-proj"
-                    style={{ width: `${project.progress}%` }}
-                  ></div>
+                  <div className="progress-fill-proj" style={{ width: `${project.progress}%` }}></div>
                 </div>
               </div>
 
@@ -298,6 +267,7 @@ const Projects = () => {
             </div>
           ))}
         </div>
+
       </main>
     </div>
   );
