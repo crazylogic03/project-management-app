@@ -1,6 +1,6 @@
 const express = require("express");
 const passport = require("passport");
-const { signup, signin } = require("../controllers/userController.js");
+const { signup, signin, updateUser } = require("../controllers/userController.js");
 const jwt = require("jsonwebtoken");
 const { PrismaClient } = require("@prisma/client");
 
@@ -30,6 +30,20 @@ router.get("/me", async (req, res) => {
     res.status(401).json({ message: "Invalid or expired token" });
   }
 });
+
+router.put("/me", async (req, res, next) => {
+  // Middleware to verify token and attach user to req
+  const token = req.headers.authorization?.split(" ")[1];
+  if (!token) return res.status(401).json({ message: "No token provided" });
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || "supersecretkey");
+    req.user = { id: decoded.id }; // Minimal user object for controller
+    next();
+  } catch (err) {
+    return res.status(401).json({ message: "Invalid token" });
+  }
+}, updateUser);
 
 router.get(
   "/google",

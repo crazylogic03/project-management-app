@@ -29,6 +29,7 @@ body {
 .main-body {
     margin-left: 300px;
     flex: 1;
+    width: calc(100% - 300px);
     padding: 25px 35px;
     overflow-y: auto;
     height: 100vh;
@@ -63,6 +64,16 @@ body {
     background-color: #029292;
     color: #fff;
 }
+
+/* Ensure SVG icons inside .icon use currentColor so they are visible */
+.icon svg {
+  width: 18px;
+  height: 18px;
+  color: #029292;
+}
+.icon:hover svg { color: #fff; }
+
+.icon-btn { background: transparent; border: 0; padding: 0; }
 
 .profile {
     display: flex;
