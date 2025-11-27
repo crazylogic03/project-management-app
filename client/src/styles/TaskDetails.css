@@ -97,3 +97,44 @@
   font-size: 14px;
   color: #666;
 }
+
+/* Dark Mode Overrides */
+body.dark-mode .taskdetail-main {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+body.dark-mode .taskdetail-header h1,
+body.dark-mode .taskdetail-title {
+  color: var(--text-primary);
+}
+
+body.dark-mode .taskdetail-table {
+  border-color: var(--border-color);
+  background: var(--card-bg);
+}
+
+body.dark-mode .table-header {
+  border-bottom-color: var(--border-color);
+  color: var(--text-secondary);
+  background: var(--bg-secondary);
+}
+
+body.dark-mode .table-row {
+  border-bottom-color: var(--border-color);
+  color: var(--text-primary);
+}
+
+body.dark-mode .table-row:hover {
+  background: var(--bg-secondary);
+}
+
+body.dark-mode .updated {
+  color: var(--text-secondary);
+}
+
+body.dark-mode .status-tag {
+  background-color: rgba(0, 150, 136, 0.2);
+  color: #009688;
+  border: 1px solid rgba(0, 150, 136, 0.3);
+}

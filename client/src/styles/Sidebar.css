@@ -1,5 +1,3 @@
-/* ===== SIDEBAR (GLOBAL) ===== */
-
 .sidebar {
     width: 280px;
     background: #ffffff;
@@ -22,7 +20,6 @@
     margin-bottom: 42px;
 }
 
-/* Nav Link */
 .sidebar-link {
     display: flex;
     align-items: center;
@@ -33,7 +30,7 @@
     color: #374151;
     text-decoration: none;
     margin-bottom: 12px;
-    transition: all .25s ease;
+    transition: all 0.25s ease;
 }
 
 .sidebar-link:hover {
@@ -57,16 +54,62 @@
 }
 
 .sidebar-footer .sidebar-link {
-    opacity: .85;
+    opacity: 0.85;
 }
 
 .sidebar-footer .sidebar-link:hover {
     opacity: 1;
 }
 
-/* Icon tuning */
+/* Icons */
 .sidebar-link svg {
     width: 20px;
     height: 20px;
     stroke-width: 1.8;
+    transition: 0.25s;
+}
+
+/* ============================
+   DARK MODE (MATCHES DASHBOARD)
+============================ */
+
+body.dark-mode .sidebar {
+    background-color: var(--bg-primary);
+    border-right: 1px solid var(--border-color);
+}
+
+body.dark-mode .sidebar-logo {
+    color: #00e0e0;
+}
+
+body.dark-mode .sidebar-link {
+    color: var(--text-primary);
+    border-color: var(--border-color);
+}
+
+body.dark-mode .sidebar-link svg {
+    color: var(--text-primary);
+}
+
+body.dark-mode .sidebar-link:hover {
+    background-color: rgba(0, 185, 185, 0.15);
+    color: #00e0e0;
+}
+
+body.dark-mode .sidebar-link.active {
+    background: rgba(0, 185, 185, 0.2);
+    color: #00e0e0;
+    box-shadow: inset 0 0 0 1.3px #00e0e0;
+}
+
+body.dark-mode .sidebar-footer {
+    border-top: 1px solid var(--border-color);
+}
+
+body.dark-mode .sidebar-footer .sidebar-link {
+    color: var(--text-secondary);
+}
+
+body.dark-mode .sidebar-footer .sidebar-link:hover {
+    color: var(--text-primary);
 }

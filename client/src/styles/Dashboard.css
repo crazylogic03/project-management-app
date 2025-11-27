@@ -395,4 +395,101 @@ body {
   text-align: center;
   font-size: 13px;
   color: #555;
+
+}
+
+/* Dark Mode Overrides for Dashboard */
+body.dark-mode {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+body.dark-mode .dashboard-page,
+body.dark-mode .dashboard-container,
+body.dark-mode .main-body,
+body.dark-mode .right-panel {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  border-color: var(--border-color);
+}
+
+body.dark-mode .stat-card,
+body.dark-mode .task-card,
+body.dark-mode .widget-card,
+body.dark-mode .widget-card1,
+body.dark-mode .working-activities {
+  background-color: var(--card-bg);
+  color: var(--text-primary);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--border-color);
+}
+
+body.dark-mode .stat-card h3,
+body.dark-mode .task-card h3,
+body.dark-mode .widget-card h3,
+body.dark-mode .upcoming-section h2,
+body.dark-mode .dashboard-header h1 {
+  color: var(--text-primary);
+}
+
+body.dark-mode .dashboard-header p,
+body.dark-mode .task-card .type,
+body.dark-mode .task-card .deadline,
+body.dark-mode .progress-info,
+body.dark-mode .widget-card ul span,
+body.dark-mode .day,
+body.dark-mode .total-time {
+  color: var(--text-secondary);
+}
+
+body.dark-mode .icon,
+body.dark-mode .profile {
+  border-color: var(--border-color);
+  color: var(--text-primary);
+}
+
+body.dark-mode .icon svg {
+  color: var(--text-primary);
+}
+
+body.dark-mode .day {
+  background-color: #3d3d3d;
+}
+
+body.dark-mode .day.active {
+  background-color: #009688;
+  color: #fff;
+}
+
+body.dark-mode .stat-card.total {
+  background-color: #1f2937;
+  /* Darker teal/slate */
+  border-left-color: #009688;
+}
+
+body.dark-mode .stat-card.active {
+  background-color: #1e3a8a;
+  /* Dark blue */
+  border-left-color: #3b82f6;
+}
+
+body.dark-mode .stat-card.completed {
+  background-color: #064e3b;
+  /* Dark green */
+  border-left-color: #10b981;
+}
+
+body.dark-mode .task-card:nth-child(1) {
+  background-color: #1f2937;
+  border-left-color: #009688;
+}
+
+body.dark-mode .task-card:nth-child(2) {
+  background-color: #1e3a8a;
+  border-left-color: #3b82f6;
+}
+
+body.dark-mode .task-card:nth-child(3) {
+  background-color: #064e3b;
+  border-left-color: #10b981;
 }

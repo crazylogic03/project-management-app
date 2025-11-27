@@ -44,3 +44,31 @@ exports.signin = async (req, res) => {
     res.status(500).json({ message: "Server error during login" });
   }
 };
+
+// ✅ Update User Controller
+exports.updateUser = async (req, res) => {
+  try {
+    const { id } = req.user; // Assumes middleware populates req.user
+    const { name, phone, country, city, zipCode, notifications, preferences } = req.body;
+
+    const updatedUser = await prisma.user.update({
+      where: { id },
+      data: {
+        name,
+        phone,
+        country,
+        city,
+        zipCode,
+        notifications,
+        preferences,
+        profilePic: req.body.profilePic, // Base64 string
+        ...(req.body.password && { password: await bcrypt.hash(req.body.password, 10) })
+      },
+    });
+
+    res.json({ message: "Profile updated successfully", user: updatedUser });
+  } catch (err) {
+    console.error("Error updating user:", err);
+    res.status(500).json({ message: "Server error during update" });
+  }
+};

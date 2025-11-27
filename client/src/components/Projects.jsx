@@ -3,9 +3,12 @@ import Sidebar from "./Sidebar";
 import "../styles/Projects.css";
 import { CalendarDays, Users, Plus } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
+import { useTheme } from "../context/ThemeContext";
 
 const Projects = () => {
+  const { darkMode } = useTheme();
   const navigate = useNavigate();
+
   const [projects, setProjects] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
   const [showModal, setShowModal] = useState(false);
@@ -13,9 +16,9 @@ const Projects = () => {
   const dropdownRef = useRef(null);
 
   const projectColors = [
-    { bg: "#ccfafa", border: "#00b9b9" },
-    { bg: "#e5f0ff", border: "#7aaff5" },
-    { bg: "#edf4ef", border: "#b4ccb9" },
+    { bg: "#ccfafa", darkBg: "rgba(0, 185, 185, 0.15)", border: "#00b9b9" },
+    { bg: "#e5f0ff", darkBg: "rgba(122, 175, 245, 0.15)", border: "#7aaff5" },
+    { bg: "#edf4ef", darkBg: "rgba(180, 204, 185, 0.15)", border: "#b4ccb9" },
   ];
 
   const [formData, setFormData] = useState({
@@ -25,10 +28,10 @@ const Projects = () => {
     description: "",
     status: "Not Started",
     template: "",
-    color: "",
     organization: "",
   });
 
+  // Load projects
   useEffect(() => {
     const loadBoards = async () => {
       const user = JSON.parse(localStorage.getItem("user"));
@@ -46,7 +49,7 @@ const Projects = () => {
           progress: b.progress,
           members: b.members?.length || 1,
           status: b.status,
-          ...projectColors[index % 3],
+          ...projectColors[index % projectColors.length],
         }));
 
         setProjects(mapped);
@@ -54,9 +57,11 @@ const Projects = () => {
         console.error(err);
       }
     };
+
     loadBoards();
   }, [navigate]);
 
+  // Close dropdown on outside click
   useEffect(() => {
     const close = (e) => {
       if (
@@ -73,7 +78,10 @@ const Projects = () => {
 
   const openDropdownAt = (e) => {
     const rect = e.currentTarget.getBoundingClientRect();
-    setDropdownPos({ top: rect.bottom + window.scrollY + 6, left: rect.left + window.scrollX });
+    setDropdownPos({
+      top: rect.bottom + window.scrollY + 6,
+      left: rect.left + window.scrollX,
+    });
     setShowDropdown(true);
   };
 
@@ -116,7 +124,7 @@ const Projects = () => {
       const newBoard = await res.json();
       if (!res.ok) return alert(newBoard.message || "Failed to create project");
 
-      const index = projects.length % 3;
+      const index = projects.length % projectColors.length;
       const newColor = projectColors[index];
 
       setProjects([
@@ -153,14 +161,13 @@ const Projects = () => {
     <div className="projects-container">
       <Sidebar />
 
-      {/* ✅ FIX */}
       <main className="projects-main">
 
         <div className="projects-header-new">
           <h1>Projects</h1>
         </div>
 
-        <div className="create-card" onClick={(e) => openDropdownAt(e)}>
+        <div className="create-card" onClick={openDropdownAt}>
           <Plus size={35} />
           <p>Create New Project</p>
         </div>
@@ -185,7 +192,6 @@ const Projects = () => {
               <label>Project Name</label>
               <input
                 type="text"
-                placeholder="Enter project name"
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
               />
@@ -208,7 +214,6 @@ const Projects = () => {
 
               <label>Description</label>
               <textarea
-                placeholder="Enter description"
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
               />
@@ -238,9 +243,14 @@ const Projects = () => {
             <div
               key={project.id}
               className="project-card"
-              style={{ backgroundColor: project.bg, borderLeft: `6px solid ${project.border}` }}
+              style={{
+                backgroundColor: darkMode ? project.darkBg : project.bg,
+                borderLeft: `6px solid ${project.border}`,
+              }}
             >
-              <div className="project-card-top"><h3>{project.name}</h3></div>
+              <div className="project-card-top">
+                <h3>{project.name}</h3>
+              </div>
 
               <div className="project-info">
                 <p><CalendarDays size={16} /> Due: {new Date(project.deadline).toLocaleDateString()}</p>
@@ -252,7 +262,10 @@ const Projects = () => {
                 </div>
 
                 <div className="progress-bar-proj">
-                  <div className="progress-fill-proj" style={{ width: `${project.progress}%` }}></div>
+                  <div
+                    className="progress-fill-proj"
+                    style={{ width: `${project.progress}%` }}
+                  />
                 </div>
               </div>
 
@@ -263,7 +276,6 @@ const Projects = () => {
               >
                 View Project →
               </Link>
-
             </div>
           ))}
         </div>

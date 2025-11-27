@@ -188,4 +188,111 @@
   padding: 10px 20px;
   border-radius: 8px;
   color: white;
+
+
+}
+
+/* Dark Mode Overrides */
+body.dark-mode .projects-main {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+body.dark-mode .section-title {
+  color: var(--text-primary);
+}
+
+body.dark-mode .project-card {
+  background: var(--card-bg);
+  border: 1px solid #4A4A4A;
+  /* Specific border color */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+body.dark-mode .project-card-top h3 {
+  color: #F5F5F5;
+  /* Bright white title */
+}
+
+body.dark-mode .project-info p {
+  color: #CCCCCC;
+  /* Light gray labels */
+}
+
+body.dark-mode .project-info p span,
+body.dark-mode .project-info p svg {
+  color: #AAAAAA;
+  /* Secondary text/icons */
+}
+
+body.dark-mode .progress-bar-proj {
+  background: #555555;
+  /* Lighter gray background */
+}
+
+body.dark-mode .create-card {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: rgba(0, 150, 136, 0.05);
+}
+
+body.dark-mode .create-card:hover {
+  background: rgba(0, 150, 136, 0.1);
+}
+
+body.dark-mode .create-dropdown {
+  background: var(--card-bg);
+  border-color: var(--border-color);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+body.dark-mode .dropdown-item {
+  color: var(--text-primary);
+}
+
+body.dark-mode .dropdown-item:hover {
+  background-color: var(--bg-secondary);
+  color: var(--accent);
+}
+
+body.dark-mode .details-btn {
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+}
+
+body.dark-mode .details-btn:hover {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+body.dark-mode .modal-box {
+  background: var(--card-bg);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+}
+
+body.dark-mode .modal-box input,
+body.dark-mode .modal-box textarea,
+body.dark-mode .modal-box select {
+  background: #333;
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+}
+
+body.dark-mode .modal-box input:focus,
+body.dark-mode .modal-box textarea:focus,
+body.dark-mode .modal-box select:focus {
+  border-color: var(--accent);
+}
+
+body.dark-mode .cancel-btn {
+  background: #444;
+  color: #ccc;
+}
+
+body.dark-mode .cancel-btn:hover {
+  background: #555;
+  color: #fff;
+
 }
