@@ -27,9 +27,6 @@ model User {
   notifications Json?
   preferences   Json?
   boards      Board[]    @relation("BoardOwner")
-
-  boards      Board[]       @relation("BoardOwner")
-
   memberships BoardMember[]
   comments    Comment[]
   activities  Activity[]
