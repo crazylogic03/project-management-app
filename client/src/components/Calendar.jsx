@@ -209,7 +209,7 @@ const Calendar = () => {
     return (
         <div className="dashboard-container">
             <Sidebar />
-            <main className="main-body" style={{ flex: 1, height: '100vh', display: 'flex', flexDirection: 'column', padding: '30px', overflow: 'hidden' }}>
+            <main className="main-body" style={{ width: '100vw', paddingLeft: '330px', paddingRight: '30px', paddingTop: '30px', paddingBottom: '30px', marginLeft: 0, boxSizing: 'border-box', height: '100vh', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
                 <div className="calendar-page">
 
                     {/* Header */}
@@ -219,11 +219,7 @@ const Calendar = () => {
                         </div>
 
                         <div className="calendar-controls">
-                            <div className="view-switcher">
-                                <button className={`view-btn ${view === 'month' ? 'active' : ''}`} onClick={() => setView('month')}>Month</button>
-                                <button className={`view-btn ${view === 'week' ? 'active' : ''}`} onClick={() => setView('week')}>Week</button>
-                                <button className={`view-btn ${view === 'day' ? 'active' : ''}`} onClick={() => setView('day')}>Day</button>
-                            </div>
+
 
                             <button className="nav-btn" onClick={handlePrevMonth}><ChevronLeft size={20} /></button>
                             <button className="nav-btn" onClick={handleNextMonth}><ChevronRight size={20} /></button>
