@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require("express")
 const cors = require("cors")
 const dotenv = require("dotenv")
@@ -9,7 +10,7 @@ const userRoutes = require("./routes/userRoutes.js")
 const boardRoutes = require("./routes/boards.js");
 
 
-dotenv.config();
+
 
 const app = express();
 

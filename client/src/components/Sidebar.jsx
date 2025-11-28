@@ -34,13 +34,6 @@ const Sidebar = () => {
         </NavLink>
         <a className="sidebar-link"><BarChart3 size={20} /> Reports</a>
         <a className="sidebar-link"><FileStack size={20} /> Files</a>
-        <a className="sidebar-link">
-          <BarChart3 size={20} /> Reports
-        </a>
-
-        <a className="sidebar-link">
-          <FileStack size={20} /> Files
-        </a>
 
         <NavLink to="/settings" className="sidebar-link">
           <Settings size={20} /> Settings
