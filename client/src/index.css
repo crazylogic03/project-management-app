@@ -10,9 +10,9 @@
   --bg-secondary: #f7f9fb;
   --text-primary: #000000;
   --text-secondary: #666666;
-  --border-color: #e0e0e0;
+  --border-color: #680dc9;
   --card-bg: #ffffff;
-  --accent: #00b9b9;
+  --accent: #54d1cf;
 
   /* Apply variables to root */
   color: var(--text-primary);
