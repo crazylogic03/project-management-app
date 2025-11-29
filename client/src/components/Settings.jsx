@@ -1,7 +1,8 @@
 import React, { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "./Sidebar";
-import { Bell, LogOut, Upload, Shield, Database, AlertTriangle, Moon, Globe, Clock, Lock, Trash2, LogOut as LogoutIcon } from "lucide-react";
+import { Bell, LogOut, Upload, Shield, Database, AlertTriangle, Moon, Globe, Clock, Lock, Trash2, LogOut as LogoutIcon, Sun } from "lucide-react";
+import { useTheme } from "../context/ThemeContext";
 import "../styles/UserSettings.css";
 import "../styles/Dashboard.css";
 
@@ -26,9 +27,10 @@ export default function SettingsPage() {
 
 	const [preferences, setPreferences] = useState({
 		language: "English",
-		timezone: "UTC-5",
-		theme: "Default"
+		timezone: "UTC-5"
 	});
+
+	const { darkMode, toggleTheme } = useTheme();
 
 	const [loading, setLoading] = useState(true);
 	const [saving, setSaving] = useState(false);
@@ -319,6 +321,27 @@ export default function SettingsPage() {
 									</label>
 								</div>
 							))}
+						</div>
+					</section>
+
+					{/* Appearance */}
+					<section className="settings-sub-card" style={{ width: '100%', boxSizing: 'border-box' }}>
+						<h3>
+							{darkMode ? <Moon size={18} style={{ marginRight: 8, display: 'inline' }} /> : <Sun size={18} style={{ marginRight: 8, display: 'inline' }} />}
+							Appearance
+						</h3>
+						<div style={{ marginTop: 12 }}>
+							<div className="notification-item">
+								<span>Dark Mode</span>
+								<label className="toggle-switch">
+									<input
+										type="checkbox"
+										checked={darkMode}
+										onChange={toggleTheme}
+									/>
+									<span className="slider"></span>
+								</label>
+							</div>
 						</div>
 					</section>
 
