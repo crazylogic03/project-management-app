@@ -299,6 +299,7 @@ export default function SettingsPage() {
 				</section>
 
 				<div className="settings-section-grid" style={{ width: '100%', display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '32px', boxSizing: 'border-box' }}>
+
 					{/* Notifications */}
 					<section className="settings-sub-card" style={{ width: '100%', boxSizing: 'border-box' }}>
 						<h3><Bell size={18} style={{ marginRight: 8, display: 'inline' }} /> Notifications</h3>

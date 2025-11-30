@@ -1,9 +1,9 @@
 const express = require('express')
-const { PrismaClient, Prisma } = require("@prisma/client");
-const { route } = require('./userRoutes');
+const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient()
 const router = express.Router();
 
+/* ---------------- GET BOARDS ---------------- */
 router.get("/", async (req, res) => {
     try {
         const { userId } = req.query;
@@ -29,7 +29,7 @@ router.get("/", async (req, res) => {
     }
 });
 
-
+/* ---------------- GET SINGLE BOARD ---------------- */
 router.get("/:id", async (req, res) => {
     try {
         const boardId = Number(req.params.id);
@@ -56,29 +56,17 @@ router.get("/:id", async (req, res) => {
                         cards: {
                             orderBy: { order: "asc" },
                             include: {
-                                comments: {
-                                    include: { user: true },
-                                },
-                                labels: {
-                                    include: {
-                                        label: true,
-                                    },
-                                },
+                                comments: { include: { user: true } },
+                                labels: { include: { label: true } },
                                 attachments: true,
-                                activity: {
-                                    include: { user: true },
-                                },
+                                activity: { include: { user: true } },
                             },
                         },
                     },
                 },
 
                 labels: true,
-
-                comments: {
-                    include: { user: true },
-                },
-
+                comments: { include: { user: true } },
                 activities: {
                     include: { user: true },
                     orderBy: { createdAt: "desc" },
@@ -98,15 +86,11 @@ router.get("/:id", async (req, res) => {
     }
 });
 
-
-
-
-
+/* ---------------- CREATE BOARD ---------------- */
 router.post("/", async (req, res) => {
     try {
         const { title, description, userId, deadline, progress, status, template, organization } = req.body;
 
-        // 1️⃣ Create board
         const board = await prisma.board.create({
             data: {
                 title,
@@ -123,7 +107,17 @@ router.post("/", async (req, res) => {
             },
         });
 
-        // 2️⃣ Create default lists
+        // ✅ ACTIVITY LOG — BOARD CREATED
+        await prisma.activity.create({
+            data: {
+                action: "CREATE_BOARD",
+                message: `Created board "${board.title}"`,
+                boardId: board.id,
+                userId: Number(userId)
+            }
+        });
+
+        // Default lists
         const defaultLists = [
             { title: "To Do", order: 1 },
             { title: "In Progress", order: 2 },
@@ -143,9 +137,7 @@ router.post("/", async (req, res) => {
         const fullBoard = await prisma.board.findUnique({
             where: { id: board.id },
             include: {
-                lists: {
-                    include: { cards: true },
-                },
+                lists: { include: { cards: true } },
             },
         });
 
@@ -156,17 +148,24 @@ router.post("/", async (req, res) => {
     }
 });
 
-
-
-
-
-/*UPadte*/
+/* ---------------- UPDATE BOARD ---------------- */
 router.put("/:id", async (req, res) => {
     try {
         const boardId = Number(req.params.id);
+
         const updated = await prisma.board.update({
             where: { id: boardId },
             data: req.body
+        });
+
+        // ✅ ACTIVITY LOG — BOARD UPDATED
+        await prisma.activity.create({
+            data: {
+                action: "UPDATE_BOARD",
+                message: `Updated board "${updated.title}"`,
+                boardId: updated.id,
+                userId: updated.createdBy
+            }
         });
 
         res.json(updated);
@@ -176,18 +175,31 @@ router.put("/:id", async (req, res) => {
     }
 });
 
-
-//delete
+/* ---------------- DELETE BOARD ---------------- */
 router.delete("/:id", async (req, res) => {
     try {
         const boardId = Number(req.params.id);
+
+        const board = await prisma.board.findUnique({ where: { id: boardId } });
+
         await prisma.board.delete({
             where: { id: boardId },
         });
+
+        // ✅ ACTIVITY LOG — BOARD DELETED
+        await prisma.activity.create({
+            data: {
+                action: "DELETE_BOARD",
+                message: `Deleted board "${board.title}"`,
+                userId: board.createdBy
+            }
+        });
+
         res.json({ message: "Board deleted successfully" });
     } catch (err) {
         console.error("DELETE /boards/:id error:", err);
         res.status(500).json({ message: "Failed to delete board" });
     }
 });
+
 module.exports = router;

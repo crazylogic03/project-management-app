@@ -93,6 +93,7 @@ model Card {
   labels      CardLabel[]
   attachments Attachment[]
   activity    Activity[]
+  completed   Boolean      @default(false)
 }
 
 model Comment {
@@ -110,14 +111,18 @@ model Comment {
 model Activity {
   id        Int      @id @default(autoincrement())
   action    String
-  userId    Int
-  boardId   Int
+  message   String
+  boardId   Int?
   cardId    Int?
+  userId    Int?
   createdAt DateTime @default(now())
-  user      User     @relation(fields: [userId], references: [id])
-  board     Board    @relation(fields: [boardId], references: [id])
+
+  user      User?    @relation(fields: [userId], references: [id])
+  board     Board?   @relation(fields: [boardId], references: [id])
   card      Card?    @relation(fields: [cardId], references: [id])
 }
+
+
 
 model Label {
   id      Int         @id @default(autoincrement())
@@ -147,3 +152,17 @@ model Attachment {
   cardId    Int?
   card      Card?    @relation(fields: [cardId], references: [id])
 }
+model Event {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String?
+  date        DateTime
+  type        String   // task, meeting, deadline
+  priority    String?
+  project     String?
+  assignee    String?
+  reminder    Int?
+  notified    Boolean  @default(false)
+  createdAt  DateTime @default(now())
+}
+

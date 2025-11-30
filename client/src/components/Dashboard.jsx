@@ -10,31 +10,37 @@ const Dashboard = () => {
   const { darkMode, toggleTheme } = useTheme();
   const [user, setUser] = useState(null);
 
+  const [tasks, setTasks] = useState([]);
+  const [boards, setBoards] = useState([]);
+  const [countdowns, setCountdowns] = useState({});
+  const [activities, setActivities] = useState([]);
+
+  /* ---------------- FETCH USER ---------------- */
   useEffect(() => {
     const fetchUser = async () => {
       try {
         const params = new URLSearchParams(window.location.search);
         const urlUser = params.get("user");
 
-        // 1️⃣ Google callback user
         if (urlUser) {
           const decoded = JSON.parse(decodeURIComponent(urlUser));
           localStorage.setItem("user", JSON.stringify(decoded));
           localStorage.setItem("googleLogin", "true");
           setUser(decoded);
+          fetchDashboard(decoded.id);
           return;
         }
 
-        // 2️⃣ Previously logged with Google
         const googleFlag = localStorage.getItem("googleLogin");
         const savedUser = localStorage.getItem("user");
 
         if (googleFlag && savedUser) {
-          setUser(JSON.parse(savedUser));
+          const parsed = JSON.parse(savedUser);
+          setUser(parsed);
+          fetchDashboard(parsed.id);
           return;
         }
 
-        // 3️⃣ Normal JWT login
         const token = localStorage.getItem("token");
         if (!token) return navigate("/login");
 
@@ -47,6 +53,7 @@ const Dashboard = () => {
         const userData = await res.json();
         localStorage.setItem("user", JSON.stringify(userData));
         setUser(userData);
+        fetchDashboard(userData.id);
 
       } catch (err) {
         console.error(err);
@@ -57,33 +64,34 @@ const Dashboard = () => {
     fetchUser();
   }, [navigate]);
 
+  /* ---------------- FETCH DASHBOARD ---------------- */
+  const fetchDashboard = async (userId) => {
+    const res = await fetch(`http://localhost:3000/api/dashboard/${userId}`);
+    const data = await res.json();
+
+    setTasks(data.tasks || []);
+    setBoards(data.boards || []);
+    setActivities(data.activities || []);
+  };
+
+  /* ---------------- LOGOUT ---------------- */
   const handleLogout = async () => {
     localStorage.clear();
     await fetch("http://localhost:3000/api/users/logout", { credentials: "include" });
     navigate("/login");
   };
 
-  const [tasks] = useState([
-    { id: 1, title: "Design Landing Page", type: "UI/UX Design", deadline: "2025-10-30T15:30:00", completed: 2, total: 5 },
-    { id: 2, title: "Database Optimization", type: "Backend Task", deadline: "2025-10-28T12:00:00", completed: 4, total: 4 },
-    { id: 3, title: "Marketing Strategy Draft", type: "Planning", deadline: "2025-11-01T10:00:00", completed: 1, total: 3 },
-  ]);
-
-  const [countdowns, setCountdowns] = useState({});
-
-  const notifications = [
-    { id: 1, text: "New project 'Ecom Site' added", time: "2h ago" },
-    { id: 2, text: "Task 'Wireframes' marked complete", time: "5h ago" },
-    { id: 3, text: "Team meeting scheduled for Friday", time: "1d ago" },
-  ];
-
+  /* ---------------- COUNTDOWN TIMER ---------------- */
   useEffect(() => {
     const calculate = () => {
       const now = new Date().getTime();
       const updated = {};
 
       tasks.forEach((task) => {
-        const diff = new Date(task.deadline).getTime() - now;
+        if (!task.dueDate) return;
+
+        const diff = new Date(task.dueDate).getTime() - now;
+
         if (diff > 0) {
           const d = Math.floor(diff / (1000 * 60 * 60 * 24));
           const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
@@ -100,45 +108,36 @@ const Dashboard = () => {
     calculate();
     const interval = setInterval(calculate, 60000);
     return () => clearInterval(interval);
-
   }, [tasks]);
 
-  const total = tasks.length;
-  const active = tasks.filter((t) => t.completed < t.total).length;
-  const completed = tasks.filter((t) => t.completed === t.total).length;
+  /* ---------------- REAL STATS ---------------- */
+  const totalBoards = boards.length;
+  const totalTasks = tasks.length;
+  const completedTasks = tasks.filter(t => t.completed).length;
+  const activeTasks = totalTasks - completedTasks;
 
   return (
     <div className="dashboard-container">
       <Sidebar />
-      <div className="divider"></div>
 
       <main className="main-body">
 
+        {/* TOP BAR */}
         <div className="dashboard-top">
           <div className="top-right">
 
-            {/* THEME BUTTON */}
-            <button
-              className="icon icon-btn"
-              onClick={toggleTheme}
-              title="Toggle Dark Mode"
-              style={{ color: darkMode ? "#009688" : "inherit" }}
-            >
+            <button className="icon icon-btn" onClick={toggleTheme}>
               <Moon size={20} fill={darkMode ? "currentColor" : "none"} />
             </button>
 
-            {/* SETTINGS */}
-            <button aria-label="Open settings" className="icon icon-btn" onClick={() => navigate('/settings')}>
+            <button className="icon icon-btn" onClick={() => navigate('/settings')}>
               <Settings size={18} />
             </button>
 
-            {/* NOTIFICATIONS */}
             <div className="icon"><Bell size={18} /></div>
 
-            {/* PROFILE */}
             {user && (
               <div className="profile">
-
                 {user.profilePic ? (
                   <img src={user.profilePic} alt="Profile" />
                 ) : (
@@ -155,11 +154,8 @@ const Dashboard = () => {
 
               </div>
             )}
-
           </div>
         </div>
-
-        <div className="divider1"></div>
 
         {/* HEADER */}
         <header className="dashboard-header">
@@ -175,12 +171,14 @@ const Dashboard = () => {
           </p>
         </header>
 
+        {/* STATS */}
         <div className="stats-container">
-          <div className="stat-card total"><h3>Total Projects</h3><p>{total}</p></div>
-          <div className="stat-card active"><h3>Active Tasks</h3><p>{active}</p></div>
-          <div className="stat-card completed"><h3>Completed Tasks</h3><p>{completed}</p></div>
+          <div className="stat-card total"><h3>Total Boards</h3><p>{totalBoards}</p></div>
+          <div className="stat-card active"><h3>Active Tasks</h3><p>{activeTasks}</p></div>
+          <div className="stat-card completed"><h3>Completed Tasks</h3><p>{completedTasks}</p></div>
         </div>
 
+        {/* TASKS */}
         <section className="upcoming-section">
           <h2>Upcoming Deadlines</h2>
 
@@ -188,20 +186,29 @@ const Dashboard = () => {
             {tasks.map((task) => (
               <div className="task-card" key={task.id}>
                 <h3>{task.title}</h3>
-                <p className="type">{task.type}</p>
-                <p className="deadline">Deadline: {new Date(task.deadline).toLocaleString()}</p>
-                <div className="countdown">⏰ {countdowns[task.id] || "Loading..."}</div>
+
+                <p className="type">📂 {task.board?.title || "Unknown Board"}</p>
+
+                <p className="deadline">
+                  {task.dueDate
+                    ? new Date(task.dueDate).toLocaleString()
+                    : "No Deadline"}
+                </p>
+
+                <div className="countdown">
+                  ⏰ {countdowns[task.id] || "No date"}
+                </div>
 
                 <div className="progress-container">
                   <div className="progress-info">
-                    <span>Progress</span>
-                    <span>{task.completed}/{task.total}</span>
+                    <span>Status</span>
+                    <span>{task.completed ? "Done" : "Pending"}</span>
                   </div>
 
                   <div className="progress-bar">
                     <div
                       className="progress-fill"
-                      style={{ width: `${(task.completed / task.total) * 100}%` }}
+                      style={{ width: task.completed ? "100%" : "0%" }}
                     />
                   </div>
                 </div>
@@ -210,22 +217,60 @@ const Dashboard = () => {
             ))}
           </div>
         </section>
+        {/* BOARDS OVERVIEW */}
+        <section className="boards-section">
+          <h2>Boards Overview</h2>
+
+          <div className="boards-grid">
+            {boards.map((board) => {
+              const boardTasks = tasks.filter(t => t.board?.id === board.id);
+              const done = boardTasks.filter(t => t.completed).length;
+              const total = boardTasks.length;
+              const percent = total ? Math.round((done / total) * 100) : 0;
+
+              return (
+                <div className="board-card" key={board.id}>
+                  <h3>{board.title}</h3>
+
+                  <p className="board-meta">
+                    ✅ {done} / {total} tasks
+                  </p>
+
+                  <div className="board-progress">
+                    <div
+                      className="board-progress-fill"
+                      style={{ width: `${percent}%` }}
+                    />
+                  </div>
+
+                  <span className="board-percent">{percent}% Complete</span>
+                </div>
+              );
+            })}
+          </div>
+        </section>
+
 
       </main>
 
+      {/* RIGHT PANEL */}
       <aside className="right-panel">
         <div className="widget-card">
-          <h3>Recent Updates</h3>
+          <h3>Recent Activity</h3>
+
+          {activities.length === 0 && <p className="empty-text">No activity yet</p>}
+
           <ul>
-            {notifications.map((n) => (
-              <li key={n.id}>
-                <p>{n.text}</p>
-                <span>{n.time}</span>
+            {activities.slice(0, 10).map((a) => (
+              <li key={a.id}>
+                <p>{a.message}</p>
+                <span>{new Date(a.createdAt).toLocaleString()}</span>
               </li>
             ))}
           </ul>
         </div>
       </aside>
+
     </div>
   );
 };

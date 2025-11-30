@@ -7,13 +7,7 @@ import "../styles/Dashboard.css";
 const Calendar = () => {
     const [currentDate, setCurrentDate] = useState(new Date());
     const [view, setView] = useState("month"); // month, week, day, agenda
-    const [events, setEvents] = useState(() => {
-        const saved = localStorage.getItem("calendarEvents");
-        return saved ? JSON.parse(saved) : [
-            { id: 1, title: "Design Landing Page", date: "2025-10-30", type: "task", time: "10:00", priority: "High", project: "Website Redesign" },
-            { id: 2, title: "Client Meeting", date: "2025-10-28", type: "meeting", time: "14:00", priority: "Medium", project: "Consulting" },
-        ];
-    });
+
     const [showModal, setShowModal] = useState(false);
     const [selectedDate, setSelectedDate] = useState(null);
     const [newEvent, setNewEvent] = useState({
@@ -27,11 +21,20 @@ const Calendar = () => {
         priority: "Medium",
         reminder: "15" // minutes before
     });
-
-    // Save events to localStorage
+    const [events, setEvents] = useState([]);
     useEffect(() => {
-        localStorage.setItem("calendarEvents", JSON.stringify(events));
-    }, [events]);
+        const fetchCalendar = async () => {
+            const user = JSON.parse(localStorage.getItem("user"));
+            if (!user) return;
+
+            const res = await fetch(`http://localhost:3000/api/calendar/${user.id}`);
+            const data = await res.json();
+            setEvents(data);
+        };
+
+        fetchCalendar();
+    }, []);
+
 
     // Request Notification Permission
     useEffect(() => {
