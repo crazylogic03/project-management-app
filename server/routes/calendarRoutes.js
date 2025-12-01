@@ -4,7 +4,7 @@ const prisma = new PrismaClient();
 
 const router = express.Router();
 
-/* ✅ GET CALENDAR EVENTS FROM TASKS */
+/* ✅ LOAD TASKS INTO CALENDAR */
 router.get("/:userId", async (req, res) => {
     try {
         const userId = Number(req.params.userId);
@@ -18,24 +18,20 @@ router.get("/:userId", async (req, res) => {
                     ]
                 }
             },
-            include: {
-                board: true
-            }
+            include: { board: true }
         });
 
-        const events = tasks.map(task => ({
-            id: task.id,
-            title: task.title,
-            type: "task",
-            date: task.dueDate
-                ? task.dueDate.toISOString().split("T")[0]
-                : null,
-            time: task.dueDate
-                ? task.dueDate.toTimeString().slice(0, 5)
-                : null,
-            priority: task.priority || "Medium",
-            project: task.board.title
-        }));
+        const events = tasks
+            .filter(t => t.dueDate)
+            .map(task => ({
+                id: task.id,
+                title: task.title,
+                type: "task",
+                date: task.dueDate.toISOString().split("T")[0],
+                time: task.dueDate.toTimeString().slice(0, 5),
+                priority: task.priority || "Medium",
+                project: task.board.title,
+            }));
 
         res.json(events);
     } catch (err) {
