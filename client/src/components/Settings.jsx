@@ -325,23 +325,34 @@ export default function SettingsPage() {
 					showPasswordModal && (
 						<div className="modal-overlay">
 							<div className="modal-content">
+								<h3>Change Password</h3>
 
-								<input
-									type="password"
-									placeholder="New Password"
-									value={passwordData.new}
-									onChange={e => setPasswordData({ ...passwordData, new: e.target.value })}
-								/>
+								<div style={{ marginBottom: "15px" }}>
+									<label style={{ display: "block", marginBottom: "5px", fontWeight: "500" }}>New Password</label>
+									<input
+										type="password"
+										className="settings-input"
+										placeholder="Enter new password"
+										value={passwordData.new}
+										onChange={e => setPasswordData({ ...passwordData, new: e.target.value })}
+									/>
+								</div>
 
-								<input
-									type="password"
-									placeholder="Confirm Password"
-									value={passwordData.confirm}
-									onChange={e => setPasswordData({ ...passwordData, confirm: e.target.value })}
-								/>
+								<div style={{ marginBottom: "20px" }}>
+									<label style={{ display: "block", marginBottom: "5px", fontWeight: "500" }}>Confirm Password</label>
+									<input
+										type="password"
+										className="settings-input"
+										placeholder="Confirm new password"
+										value={passwordData.confirm}
+										onChange={e => setPasswordData({ ...passwordData, confirm: e.target.value })}
+									/>
+								</div>
 
-								<button onClick={handlePasswordChange}>Update</button>
-								<button onClick={() => setShowPasswordModal(false)}>Cancel</button>
+								<div className="modal-actions">
+									<button className="btn secondary" onClick={() => setShowPasswordModal(false)}>Cancel</button>
+									<button className="btn primary" onClick={handlePasswordChange}>Update Password</button>
+								</div>
 
 							</div>
 						</div>
