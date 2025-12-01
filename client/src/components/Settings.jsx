@@ -3,7 +3,15 @@ import { useNavigate } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import { Bell, LogOut, Upload, Shield, AlertTriangle, Lock } from "lucide-react";
 import "../styles/UserSettings.css";
+
 import "../styles/Dashboard.css";
+
+const NOTIFICATION_OPTIONS = [
+	{ key: "taskUpdate", label: "Task updates" },
+	{ key: "deadlines", label: "Deadlines" },
+	{ key: "comments", label: "Comments & mentions" },
+	{ key: "status", label: "Project status changes" }
+];
 
 export default function SettingsPage() {
 	const navigate = useNavigate();
@@ -60,7 +68,15 @@ export default function SettingsPage() {
 				profilePic: data.profilePic || "",
 			});
 
-			setNotifications(data.notifications || {});
+			const defaultNotifications = {
+				taskUpdate: true,
+				deadlines: true,
+				comments: true,
+				status: true
+			};
+
+			// Merge backend data with defaults to ensure all keys exist
+			setNotifications({ ...defaultNotifications, ...(data.notifications || {}) });
 			setPreferences(data.preferences || {});
 			setLoading(false);
 		}
@@ -139,12 +155,14 @@ export default function SettingsPage() {
 			<Sidebar />
 
 			<main
-				className="main-body"
 				style={{
-					width: "100%",
-					flex: 1,
+					marginLeft: "300px",
+					width: "calc(100vw - 300px)",
+					flexGrow: 1,
 					padding: "32px",
 					boxSizing: "border-box",
+					overflowY: "auto",
+					height: "100vh"
 				}}
 			>
 				<header className="dashboard-header"
@@ -251,24 +269,26 @@ export default function SettingsPage() {
 				</section>
 
 				{/* 🔥 LOWER GRID: Notifications / Security / Danger Zone */}
-				<div className="settings-section-grid">
+				<div className="settings-section-grid" style={{ gridTemplateColumns: "1fr" }}>
 
 					<section className="settings-sub-card">
 						<h3><Bell size={18} /> Notifications</h3>
-						{Object.entries(notifications).map(([key, val]) => (
+						{NOTIFICATION_OPTIONS.map(({ key, label }) => (
 							<div key={key} className="notification-item">
-								<span>{key}</span>
-								<input type="checkbox" checked={val} onChange={() => handleNotificationChange(key)} />
+								<span>{label}</span>
+								<label className="toggle-switch">
+									<input
+										type="checkbox"
+										checked={!!notifications[key]}
+										onChange={() => handleNotificationChange(key)}
+									/>
+									<span className="slider"></span>
+								</label>
 							</div>
 						))}
 					</section>
 
-					<section className="settings-sub-card">
-						<h3><Shield size={18} /> Account Security</h3>
-						<div className="notification-item" onClick={() => setShowPasswordModal(true)}>
-							Change Password <Lock size={16} />
-						</div>
-					</section>
+
 
 					{/* Account Security */}
 					<section className="settings-sub-card" style={{ width: '100%', boxSizing: 'border-box' }}>
@@ -281,7 +301,7 @@ export default function SettingsPage() {
 							</div>
 							<div className="notification-item" style={{ cursor: 'pointer' }} onClick={handleLogout}>
 								<span>Logout from all devices</span>
-								<LogoutIcon size={16} color="#666" />
+								<LogOut size={16} color="#666" />
 							</div>
 						</div>
 					</section>
