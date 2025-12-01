@@ -65,6 +65,7 @@ app.use("/api/cards/details", cardDetailsRoutes);
 app.use("/api/events", require("./routes/events"));
 app.use("/api/dashboard", require("./routes/dashboard"));
 app.use("/api/calendar", calendarRoutes);
+app.use("/api/settings", require("./routes/settings"));
 
 
 
