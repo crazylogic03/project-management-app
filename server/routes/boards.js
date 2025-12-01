@@ -202,4 +202,47 @@ router.delete("/:id", async (req, res) => {
     }
 });
 
+/* ---------------- ADD MEMBER TO BOARD ---------------- */
+router.post("/:id/members", async (req, res) => {
+    try {
+        const boardId = Number(req.params.id);
+        const { userId, role } = req.body;
+
+        if (!userId) return res.status(400).json({ message: "User ID required" });
+
+        // Check if already member
+        const existing = await prisma.boardMember.findFirst({
+            where: { boardId, userId: Number(userId) }
+        });
+
+        if (existing) {
+            return res.status(400).json({ message: "User is already a member" });
+        }
+
+        const member = await prisma.boardMember.create({
+            data: {
+                boardId,
+                userId: Number(userId),
+                role: role || "viewer"
+            },
+            include: { user: true }
+        });
+
+        // ✅ ACTIVITY LOG — MEMBER ADDED
+        await prisma.activity.create({
+            data: {
+                action: "ADD_MEMBER",
+                message: `Added ${member.user.name} to the board`,
+                boardId,
+                userId: Number(userId) // The user who was added (or the adder? usually the adder, but simplified here)
+            }
+        });
+
+        res.json(member);
+    } catch (err) {
+        console.error("POST /boards/:id/members error:", err);
+        res.status(500).json({ message: "Failed to add member" });
+    }
+});
+
 module.exports = router;

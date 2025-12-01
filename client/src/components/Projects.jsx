@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import Sidebar from "./Sidebar";
 import "../styles/Projects.css";
-import { CalendarDays, Users, Plus } from "lucide-react";
+import { CalendarDays, Users, Plus, Trash2 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useTheme } from "../context/ThemeContext";
 
@@ -157,6 +157,28 @@ const Projects = () => {
     }
   };
 
+  const deleteProject = async (e, projectId) => {
+    e.stopPropagation(); // Prevent navigation to details
+    if (!window.confirm("Are you sure you want to delete this project? This action cannot be undone.")) {
+      return;
+    }
+
+    try {
+      const res = await fetch(`http://localhost:3000/api/boards/${projectId}`, {
+        method: "DELETE",
+      });
+
+      if (res.ok) {
+        setProjects(projects.filter((p) => p.id !== projectId));
+      } else {
+        alert("Failed to delete project");
+      }
+    } catch (err) {
+      console.error("Error deleting project:", err);
+      alert("Error deleting project");
+    }
+  };
+
   return (
     <div className="projects-container">
       <Sidebar />
@@ -250,6 +272,21 @@ const Projects = () => {
             >
               <div className="project-card-top">
                 <h3>{project.name}</h3>
+                <button
+                  className="delete-project-btn"
+                  onClick={(e) => deleteProject(e, project.id)}
+                  style={{
+                    background: "transparent",
+                    border: "none",
+                    cursor: "pointer",
+                    color: "#ff4d4d",
+                    padding: "4px",
+                    marginLeft: "auto"
+                  }}
+                  title="Delete Project"
+                >
+                  <Trash2 size={18} />
+                </button>
               </div>
 
               <div className="project-info">

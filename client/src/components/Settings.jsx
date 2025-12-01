@@ -281,10 +281,7 @@ export default function SettingsPage() {
 										placeholder="515001"
 									/>
 								</label>
-								<label>
-									Role
-									<div className="readonly-badge">Admin</div>
-								</label>
+
 							</div>
 
 							<div className="settings-actions">
@@ -327,13 +324,7 @@ export default function SettingsPage() {
 					<section className="settings-sub-card" style={{ width: '100%', boxSizing: 'border-box' }}>
 						<h3><Shield size={18} style={{ marginRight: 8, display: 'inline' }} /> Account Security</h3>
 						<div style={{ marginTop: 12 }}>
-							<div className="notification-item">
-								<span>Two-factor authentication</span>
-								<label className="toggle-switch">
-									<input type="checkbox" disabled />
-									<span className="slider"></span>
-								</label>
-							</div>
+
 							<div className="notification-item" style={{ cursor: 'pointer' }} onClick={() => setShowPasswordModal(true)}>
 								<span>Change Password</span>
 								<Lock size={16} color="#666" />

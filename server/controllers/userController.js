@@ -72,3 +72,32 @@ exports.updateUser = async (req, res) => {
     res.status(500).json({ message: "Server error during update" });
   }
 };
+
+// ✅ Search Users Controller
+exports.searchUsers = async (req, res) => {
+  try {
+    const { query } = req.query;
+    if (!query) return res.json([]);
+
+    const users = await prisma.user.findMany({
+      where: {
+        OR: [
+          { name: { contains: query } }, // Case-insensitive by default in some DBs, but Prisma depends on provider
+          { email: { contains: query } }
+        ]
+      },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        profilePic: true
+      },
+      take: 5
+    });
+
+    res.json(users);
+  } catch (err) {
+    console.error("Error searching users:", err);
+    res.status(500).json({ message: "Server error during search" });
+  }
+};
