@@ -1,6 +1,6 @@
 const express = require("express");
 const passport = require("passport");
-const { signup, signin, updateUser } = require("../controllers/userController.js");
+const { signup, signin, updateUser, searchUsers } = require("../controllers/userController.js");
 const jwt = require("jsonwebtoken");
 const { PrismaClient } = require("@prisma/client");
 
@@ -9,6 +9,7 @@ const router = express.Router();
 
 router.post("/signup", signup);
 router.post("/login", signin);
+router.get("/search", searchUsers);
 
 router.get("/me", async (req, res) => {
   try {

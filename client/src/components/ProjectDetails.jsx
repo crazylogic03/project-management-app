@@ -8,6 +8,12 @@ import {
   CheckCircle,
   Trash2,
   X,
+  Mail,
+  MessageSquare,
+  UserPlus,
+  Search,
+  AtSign,
+  Hash,
 } from "lucide-react";
 import { useParams } from "react-router-dom";
 
@@ -24,7 +30,9 @@ const ProjectDetails = () => {
 
   // MODALS
   const [showListModal, setShowListModal] = useState(false);
+
   const [showTaskModal, setShowTaskModal] = useState(false);
+  const [showTeamModal, setShowTeamModal] = useState(false);
 
   const [showCardModal, setShowCardModal] = useState(false);
   const [activeCard, setActiveCard] = useState(null);
@@ -32,9 +40,14 @@ const ProjectDetails = () => {
   const [descInput, setDescInput] = useState("");
   const [commentInput, setCommentInput] = useState("");
 
+
   const [newListName, setNewListName] = useState("");
   const [newTaskTitle, setNewTaskTitle] = useState("");
   const [currentList, setCurrentList] = useState(null);
+
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
+  const [isSearching, setIsSearching] = useState(false);
 
   /* --------------------------------------
        LOAD PROJECT
@@ -352,6 +365,56 @@ const ProjectDetails = () => {
     setShowCardModal(false);
   };
 
+  /* --------------------------------------
+      TEAM MANAGEMENT
+  -------------------------------------- */
+  const searchUsers = async (query) => {
+    setSearchQuery(query);
+    if (!query.trim()) {
+      setSearchResults([]);
+      return;
+    }
+
+    setIsSearching(true);
+    try {
+      const res = await fetch(`http://localhost:3000/api/users/search?query=${query}`);
+      const data = await res.json();
+      setSearchResults(data);
+    } catch (err) {
+      console.error("Search error:", err);
+    } finally {
+      setIsSearching(false);
+    }
+  };
+
+  const addMember = async (userId) => {
+    try {
+      const res = await fetch(`http://localhost:3000/api/boards/${project.id}/members`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId, role: "viewer" }),
+      });
+
+      const newMember = await res.json();
+
+      if (!res.ok) {
+        return alert(newMember.message || "Failed to add member");
+      }
+
+      setProject({
+        ...project,
+        members: [...project.members, newMember],
+      });
+
+      setSearchQuery("");
+      setSearchResults([]);
+      alert("Member added successfully!");
+    } catch (err) {
+      console.error("Add member error:", err);
+      alert("Failed to add member");
+    }
+  };
+
   return (
     <div className="project-container">
       <Sidebar />
@@ -393,7 +456,7 @@ const ProjectDetails = () => {
             </div>
           </div>
 
-          <div className="project-card">
+          <div className="project-card" onClick={() => setShowTeamModal(true)} style={{ cursor: "pointer" }}>
             <Users size={20} />
             <div>
               <h4>Team Members</h4>
@@ -589,194 +652,340 @@ const ProjectDetails = () => {
       )}
 
       {/* ---------------------------------------------------------
-                CARD DETAILS MODAL
+                TEAM MEMBERS MODAL
       ---------------------------------------------------------- */}
-      {showCardModal && cardDetails && (
-        <div className="task-modal-overlay">
-          <div className="task-modal">
-
-            {/* HEADER */}
-            <div className="task-modal-header">
-              <input
-                className="task-title-input"
-                value={cardDetails.title}
-                onChange={(e) =>
-                  setCardDetails({ ...cardDetails, title: e.target.value })
-                }
-                onBlur={updateCardTitle}
-              />
-
-              <button className="delete-task-btn" onClick={deleteTask}>
-                Delete
-              </button>
-
-              <X className="close-modal" onClick={() => setShowCardModal(false)} />
+      {showTeamModal && (
+        <div className="modal-overlay">
+          <div className="modal-box" style={{ maxWidth: "500px" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
+              <h2>Team Members</h2>
+              <X style={{ cursor: "pointer" }} onClick={() => setShowTeamModal(false)} />
             </div>
 
-            {/* BODY */}
-            <div className="task-modal-body">
+            {/* TEAM LIST (TOP) */}
+            <div className="team-list" style={{ marginBottom: "20px", maxHeight: "300px", overflowY: "auto" }}>
+              <h3 style={{ marginTop: 0 }}>Current Members</h3>
+              {project.members && project.members.length > 0 ? (
+                project.members.map((member) => (
+                  <div key={member.id} className="team-member-item" style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    padding: "10px",
 
-              {/* STATUS TOGGLE */}
-              <section className="status-section">
-                <h3>Status</h3>
-                <label className="status-toggle">
-                  <input
-                    type="checkbox"
-                    checked={!!cardDetails.completed}
-                    onChange={(e) =>
-                      updateCardCompleted(
-                        cardDetails.id,
-                        cardDetails.listId,
-                        e.target.checked
-                      )
-                    }
-                  />
-                  <span>{cardDetails.completed ? "Done" : "Mark as done"}</span>
-                </label>
-              </section>
+                  }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                      {member.user.profilePic ? (
+                        <img
+                          src={member.user.profilePic}
+                          alt={member.user.name}
+                          style={{ width: "36px", height: "36px", borderRadius: "50%", objectFit: "cover" }}
+                        />
+                      ) : (
+                        <div style={{
+                          width: "36px", height: "36px", borderRadius: "50%", background: "#6c5ce7", color: "white",
+                          display: "flex", alignItems: "center", justifyContent: "center", fontWeight: "bold"
+                        }}>
+                          {member.user.name.charAt(0).toUpperCase()}
+                        </div>
+                      )}
+                      <div>
+                        <p style={{ margin: 0, fontWeight: "600", fontSize: "14px" }}>{member.user.name}</p>
+                        <p style={{ margin: 0, fontSize: "12px", color: "#888" }}>{member.role}</p>
+                      </div>
+                    </div>
+                    <div style={{ display: "flex", gap: "8px" }}>
+                      <a href={`mailto:${member.user.email}`} style={{ color: "#555" }} title="Send Email">
+                        <Mail size={16} />
+                      </a>
+                      <a href="https://slack.com/signin" target="_blank" rel="noopener noreferrer" style={{ color: "#555" }} title="Slack Message">
+                        <MessageSquare size={16} />
+                      </a>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <p>No members found.</p>
+              )}
+            </div>
 
-              {/* DESCRIPTION */}
-              <section>
-                <h3>Description</h3>
-                <textarea
-                  className="desc-input"
-                  value={descInput}
-                  onChange={(e) => setDescInput(e.target.value)}
-                  onBlur={saveDescription}
-                />
-              </section>
-              {/* PRIORITY */}
-              <section>
-                <h3>Priority</h3>
-
-                <select
-                  className="priority-select"
-                  value={cardDetails.priority || ""}
-                  onChange={(e) => {
-                    const value = e.target.value;
-
-                    setCardDetails({ ...cardDetails, priority: value });
-
-                    fetch(`http://localhost:3000/api/cards/${activeCard.id}`, {
-                      method: "PUT",
-                      headers: { "Content-Type": "application/json" },
-                      body: JSON.stringify({ priority: value }),
-                    });
-
-                    // Update board preview
-                    setProject({
-                      ...project,
-                      lists: project.lists.map((list) =>
-                        list.id === activeCard.listId
-                          ? {
-                            ...list,
-                            cards: list.cards.map((c) =>
-                              c.id === activeCard.id ? { ...c, priority: value } : c
-                            ),
-                          }
-                          : list
-                      ),
-                    });
+            {/* INVITE BUTTONS (BOTTOM) */}
+            <div className="invite-section" style={{ paddingTop: "20px" }}>
+              <h3 style={{ fontSize: "16px", marginBottom: "12px" }}>Invite New Members</h3>
+              <div style={{ display: "flex", gap: "10px" }}>
+                <a
+                  href={`https://mail.google.com/mail/?view=cm&fs=1&su=${encodeURIComponent(`Invitation to join project: ${project.title}`)}&body=${encodeURIComponent(`Hello,\n\nI'm working on a project called "${project.title}" and I'd love for you to join the team!\n\nWe're using Project Manager to track our tasks and progress.\n\nPlease let me know if you're interested, and I'll add you to the workspace.\n\nBest regards,`)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="invite-btn"
+                  style={{
+                    flex: 1,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: "8px",
+                    padding: "8px 16px",
+                    background: "#EA4335", // Gmail red
+                    borderRadius: "30px",
+                    boxShadow: "0 2px 8px rgba(234, 67, 53, 0.3)",
+                    textDecoration: "none",
+                    color: "white",
+                    fontWeight: "600",
+                    fontSize: "14px",
+                    whiteSpace: "nowrap",
+                    transition: "transform 0.2s, box-shadow 0.2s"
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = "translateY(-2px)";
+                    e.currentTarget.style.boxShadow = "0 4px 12px rgba(234, 67, 53, 0.4)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = "translateY(0)";
+                    e.currentTarget.style.boxShadow = "0 2px 8px rgba(234, 67, 53, 0.3)";
                   }}
                 >
-                  <option value="">No Priority</option>
-                  <option value="High">🔥 High</option>
-                  <option value="Medium">⚠️ Medium</option>
-                  <option value="Low">⬇️ Low</option>
-                </select>
-              </section>
-
-
-              {/* DUE DATE */}
-              <section>
-                <h3>Due Date</h3>
-
-                <input
-                  type="date"
-                  className="due-date-input"
-                  value={
-                    cardDetails.dueDate
-                      ? new Date(cardDetails.dueDate).toISOString().split("T")[0]
-                      : ""
-                  }
-                  onChange={(e) => {
-                    const date = e.target.value;
-                    setCardDetails({ ...cardDetails, dueDate: date });
-
-                    fetch(`http://localhost:3000/api/cards/${activeCard.id}`, {
-                      method: "PUT",
-                      headers: { "Content-Type": "application/json" },
-                      body: JSON.stringify({ dueDate: date }),
+                  <AtSign size={18} /> Invite via Gmail
+                </a>
+                <a
+                  href="#"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    const inviteText = `Hello,\n\nI'm working on a project called "${project.title}" and I'd love for you to join the team!\n\nWe're using Project Manager to track our tasks and progress.\n\nPlease let me know if you're interested, and I'll add you to the workspace.\n\nBest regards,`;
+                    navigator.clipboard.writeText(inviteText).then(() => {
+                      alert("Invite message copied to clipboard! Paste it in Slack.");
+                      window.location.href = "slack://open";
+                    }).catch(err => {
+                      console.error('Failed to copy text: ', err);
+                      window.location.href = "slack://open";
                     });
                   }}
-                />
-              </section>
-
-              {/* LABELS */}
-              <section>
-                <h3>Labels</h3>
-
-                <div className="labels-row">
-                  {cardDetails.labels.map((l) => (
-                    <span
-                      key={l.labelId}
-                      className="label-chip"
-                      style={{ background: l.label.color }}
-                      onClick={() => removeLabel(l.labelId)}
-                    >
-                      {l.label.name} ✕
-                    </span>
-                  ))}
-                </div>
-
-                <div className="label-picker">
-                  {project.labels.map((label) => (
-                    <div
-                      key={label.id}
-                      className="label-option"
-                      style={{ background: label.color }}
-                      onClick={() => assignLabel(label.id)}
-                    >
-                      {label.name}
-                    </div>
-                  ))}
-                </div>
-              </section>
-
-              {/* COMMENTS */}
-              <section>
-                <h3>Comments</h3>
-
-                <div className="add-comment-row">
-                  <input
-                    placeholder="Write a comment..."
-                    value={commentInput}
-                    onChange={(e) => setCommentInput(e.target.value)}
-                  />
-                  <button onClick={addComment}>Post</button>
-                </div>
-
-                <div className="comments-list">
-                  {cardDetails.comments?.map((c) => (
-                    <div key={c.id} className="comment-item">
-                      <p><strong>{c.user.name}</strong></p>
-                      <p>{c.content}</p>
-
-                      <X
-                        className="delete-comment"
-                        onClick={() => deleteComment(c.id)}
-                      />
-                    </div>
-                  ))}
-                </div>
-              </section>
-
+                  className="invite-btn"
+                  style={{
+                    flex: 1,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: "8px",
+                    padding: "8px 16px",
+                    background: "#4A154B",
+                    borderRadius: "30px",
+                    boxShadow: "0 2px 8px rgba(74, 21, 75, 0.3)",
+                    textDecoration: "none",
+                    color: "white",
+                    fontWeight: "600",
+                    fontSize: "14px",
+                    whiteSpace: "nowrap",
+                    transition: "transform 0.2s, box-shadow 0.2s",
+                    cursor: "pointer"
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = "translateY(-2px)";
+                    e.currentTarget.style.boxShadow = "0 4px 12px rgba(74, 21, 75, 0.4)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = "translateY(0)";
+                    e.currentTarget.style.boxShadow = "0 2px 8px rgba(74, 21, 75, 0.3)";
+                  }}
+                >
+                  <Hash size={18} /> Invite via Slack
+                </a>
+              </div>
             </div>
           </div>
         </div>
       )}
 
-    </div>
+      {/* ---------------------------------------------------------
+                CARD DETAILS MODAL
+      ---------------------------------------------------------- */}
+      {
+        showCardModal && cardDetails && (
+          <div className="task-modal-overlay">
+            <div className="task-modal">
+
+              {/* HEADER */}
+              <div className="task-modal-header">
+                <input
+                  className="task-title-input"
+                  value={cardDetails.title}
+                  onChange={(e) =>
+                    setCardDetails({ ...cardDetails, title: e.target.value })
+                  }
+                  onBlur={updateCardTitle}
+                />
+
+                <button className="delete-task-btn" onClick={deleteTask}>
+                  Delete
+                </button>
+
+                <X className="close-modal" onClick={() => setShowCardModal(false)} />
+              </div>
+
+              {/* BODY */}
+              <div className="task-modal-body">
+
+                {/* STATUS TOGGLE */}
+                <section className="status-section">
+                  <h3>Status</h3>
+                  <label className="status-toggle">
+                    <input
+                      type="checkbox"
+                      checked={!!cardDetails.completed}
+                      onChange={(e) =>
+                        updateCardCompleted(
+                          cardDetails.id,
+                          cardDetails.listId,
+                          e.target.checked
+                        )
+                      }
+                    />
+                    <span>{cardDetails.completed ? "Done" : "Mark as done"}</span>
+                  </label>
+                </section>
+
+                {/* DESCRIPTION */}
+                <section>
+                  <h3>Description</h3>
+                  <textarea
+                    className="desc-input"
+                    value={descInput}
+                    onChange={(e) => setDescInput(e.target.value)}
+                    onBlur={saveDescription}
+                  />
+                </section>
+                {/* PRIORITY */}
+                <section>
+                  <h3>Priority</h3>
+
+                  <select
+                    className="priority-select"
+                    value={cardDetails.priority || ""}
+                    onChange={(e) => {
+                      const value = e.target.value;
+
+                      setCardDetails({ ...cardDetails, priority: value });
+
+                      fetch(`http://localhost:3000/api/cards/${activeCard.id}`, {
+                        method: "PUT",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ priority: value }),
+                      });
+
+                      // Update board preview
+                      setProject({
+                        ...project,
+                        lists: project.lists.map((list) =>
+                          list.id === activeCard.listId
+                            ? {
+                              ...list,
+                              cards: list.cards.map((c) =>
+                                c.id === activeCard.id ? { ...c, priority: value } : c
+                              ),
+                            }
+                            : list
+                        ),
+                      });
+                    }}
+                  >
+                    <option value="">No Priority</option>
+                    <option value="High">🔥 High</option>
+                    <option value="Medium">⚠️ Medium</option>
+                    <option value="Low">⬇️ Low</option>
+                  </select>
+                </section>
+
+
+                {/* DUE DATE */}
+                <section>
+                  <h3>Due Date</h3>
+
+                  <input
+                    type="date"
+                    className="due-date-input"
+                    value={
+                      cardDetails.dueDate
+                        ? new Date(cardDetails.dueDate).toISOString().split("T")[0]
+                        : ""
+                    }
+                    onChange={(e) => {
+                      const date = e.target.value;
+                      setCardDetails({ ...cardDetails, dueDate: date });
+
+                      fetch(`http://localhost:3000/api/cards/${activeCard.id}`, {
+                        method: "PUT",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ dueDate: date }),
+                      });
+                    }}
+                  />
+                </section>
+
+                {/* LABELS */}
+                <section>
+                  <h3>Labels</h3>
+
+                  <div className="labels-row">
+                    {cardDetails.labels.map((l) => (
+                      <span
+                        key={l.labelId}
+                        className="label-chip"
+                        style={{ background: l.label.color }}
+                        onClick={() => removeLabel(l.labelId)}
+                      >
+                        {l.label.name} ✕
+                      </span>
+                    ))}
+                  </div>
+
+                  <div className="label-picker">
+                    {project.labels.map((label) => (
+                      <div
+                        key={label.id}
+                        className="label-option"
+                        style={{ background: label.color }}
+                        onClick={() => assignLabel(label.id)}
+                      >
+                        {label.name}
+                      </div>
+                    ))}
+                  </div>
+                </section>
+
+                {/* COMMENTS */}
+                <section>
+                  <h3>Comments</h3>
+
+                  <div className="add-comment-row">
+                    <input
+                      placeholder="Write a comment..."
+                      value={commentInput}
+                      onChange={(e) => setCommentInput(e.target.value)}
+                    />
+                    <button onClick={addComment}>Post</button>
+                  </div>
+
+                  <div className="comments-list">
+                    {cardDetails.comments?.map((c) => (
+                      <div key={c.id} className="comment-item">
+                        <p><strong>{c.user.name}</strong></p>
+                        <p>{c.content}</p>
+
+                        <X
+                          className="delete-comment"
+                          onClick={() => deleteComment(c.id)}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </section>
+
+              </div>
+            </div>
+          </div>
+        )
+      }
+
+    </div >
   );
 };
 

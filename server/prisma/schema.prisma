@@ -19,7 +19,7 @@ model User {
   email       String        @unique
   password    String?
   googleId    String?       @unique
-  profilePic  String?
+  profilePic  String?       @db.LongText
   phone       String?
   country     String?
   city        String?
@@ -61,7 +61,7 @@ model BoardMember {
   userId    Int
   boardId   Int
   user      User     @relation(fields: [userId], references: [id])
-  board     Board    @relation(fields: [boardId], references: [id])
+  board     Board    @relation(fields: [boardId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
 
   @@unique([userId, boardId])
@@ -72,7 +72,7 @@ model List {
   title     String
   order     Int      @default(0)
   boardId   Int
-  board     Board    @relation(fields: [boardId], references: [id])
+  board     Board    @relation(fields: [boardId], references: [id], onDelete: Cascade)
   cards     Card[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -86,9 +86,9 @@ model Card {
   priority    String?
   order       Int          @default(0)
   listId      Int
-  list        List         @relation(fields: [listId], references: [id])
+  list        List         @relation(fields: [listId], references: [id], onDelete: Cascade)
   boardId     Int
-  board       Board        @relation(fields: [boardId], references: [id])
+  board       Board        @relation(fields: [boardId], references: [id], onDelete: Cascade)
   comments    Comment[]
   labels      CardLabel[]
   attachments Attachment[]
@@ -103,9 +103,9 @@ model Comment {
   userId    Int
   user      User     @relation(fields: [userId], references: [id])
   boardId   Int
-  board     Board    @relation(fields: [boardId], references: [id])
+  board     Board    @relation(fields: [boardId], references: [id], onDelete: Cascade)
   cardId    Int?
-  card      Card?    @relation(fields: [cardId], references: [id])
+  card      Card?    @relation(fields: [cardId], references: [id], onDelete: Cascade)
 }
 
 model Activity {
@@ -118,8 +118,8 @@ model Activity {
   createdAt DateTime @default(now())
 
   user      User?    @relation(fields: [userId], references: [id])
-  board     Board?   @relation(fields: [boardId], references: [id])
-  card      Card?    @relation(fields: [cardId], references: [id])
+  board     Board?   @relation(fields: [boardId], references: [id], onDelete: Cascade)
+  card      Card?    @relation(fields: [cardId], references: [id], onDelete: Cascade)
 }
 
 
@@ -129,7 +129,7 @@ model Label {
   name    String
   color   String
   boardId Int
-  board   Board       @relation(fields: [boardId], references: [id])
+  board   Board       @relation(fields: [boardId], references: [id], onDelete: Cascade)
   cards   CardLabel[]
 }
 
@@ -137,8 +137,8 @@ model CardLabel {
   id      Int   @id @default(autoincrement())
   cardId  Int
   labelId Int
-  card    Card  @relation(fields: [cardId], references: [id])
-  label   Label @relation(fields: [labelId], references: [id])
+  card    Card  @relation(fields: [cardId], references: [id], onDelete: Cascade)
+  label   Label @relation(fields: [labelId], references: [id], onDelete: Cascade)
 }
 
 model Attachment {
@@ -148,9 +148,9 @@ model Attachment {
   fileType  String
   createdAt DateTime @default(now())
   boardId   Int
-  board     Board    @relation(fields: [boardId], references: [id])
+  board     Board    @relation(fields: [boardId], references: [id], onDelete: Cascade)
   cardId    Int?
-  card      Card?    @relation(fields: [cardId], references: [id])
+  card      Card?    @relation(fields: [cardId], references: [id], onDelete: Cascade)
 }
 model Event {
   id          Int      @id @default(autoincrement())
@@ -165,4 +165,3 @@ model Event {
   notified    Boolean  @default(false)
   createdAt  DateTime @default(now())
 }
-

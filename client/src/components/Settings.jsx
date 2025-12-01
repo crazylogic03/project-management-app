@@ -233,6 +233,7 @@ export default function SettingsPage() {
 									<input name="zipCode" value={formData.zipCode} onChange={handleChange} />
 								</label>
 
+
 								<label>
 									Role
 									<div className="readonly-badge">Admin</div>
@@ -269,40 +270,65 @@ export default function SettingsPage() {
 						</div>
 					</section>
 
-					<section className="settings-sub-card danger-zone">
-						<h3><AlertTriangle size={18} /> Danger Zone</h3>
-						<button className="btn danger">Delete Account</button>
+					{/* Account Security */}
+					<section className="settings-sub-card" style={{ width: '100%', boxSizing: 'border-box' }}>
+						<h3><Shield size={18} style={{ marginRight: 8, display: 'inline' }} /> Account Security</h3>
+						<div style={{ marginTop: 12 }}>
+
+							<div className="notification-item" style={{ cursor: 'pointer' }} onClick={() => setShowPasswordModal(true)}>
+								<span>Change Password</span>
+								<Lock size={16} color="#666" />
+							</div>
+							<div className="notification-item" style={{ cursor: 'pointer' }} onClick={handleLogout}>
+								<span>Logout from all devices</span>
+								<LogoutIcon size={16} color="#666" />
+							</div>
+						</div>
+					</section>
+
+					{/* Danger Zone */}
+					<section className="settings-sub-card danger-zone" style={{ width: '100%', gridColumn: 'span 2', boxSizing: 'border-box' }}>
+						<h3><AlertTriangle size={18} style={{ marginRight: 8, display: 'inline' }} /> Danger Zone</h3>
+						<div style={{ marginTop: 12, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+							<div>
+								<p style={{ fontWeight: 500, color: '#333' }}>Delete Account</p>
+								<p style={{ fontSize: 13, color: '#666' }}>Permanently delete your account and all data.</p>
+							</div>
+							<button className="btn danger" onClick={() => alert("This action cannot be undone.")}>Delete Account</button>
+						</div>
 					</section>
 
 				</div>
 
 				{/* PASSWORD MODAL */}
-				{showPasswordModal && (
-					<div className="modal-overlay">
-						<div className="modal-content">
+				{
+					showPasswordModal && (
+						<div className="modal-overlay">
+							<div className="modal-content">
 
-							<input
-								type="password"
-								placeholder="New Password"
-								value={passwordData.new}
-								onChange={e => setPasswordData({ ...passwordData, new: e.target.value })}
-							/>
+								<input
+									type="password"
+									placeholder="New Password"
+									value={passwordData.new}
+									onChange={e => setPasswordData({ ...passwordData, new: e.target.value })}
+								/>
 
-							<input
-								type="password"
-								placeholder="Confirm Password"
-								value={passwordData.confirm}
-								onChange={e => setPasswordData({ ...passwordData, confirm: e.target.value })}
-							/>
+								<input
+									type="password"
+									placeholder="Confirm Password"
+									value={passwordData.confirm}
+									onChange={e => setPasswordData({ ...passwordData, confirm: e.target.value })}
+								/>
 
-							<button onClick={handlePasswordChange}>Update</button>
-							<button onClick={() => setShowPasswordModal(false)}>Cancel</button>
+								<button onClick={handlePasswordChange}>Update</button>
+								<button onClick={() => setShowPasswordModal(false)}>Cancel</button>
 
+							</div>
 						</div>
-					</div>
-				)}
+					)
+				}
 
-			</main>
-		</div>
+			</main >
+		</div >
 	);
 }
