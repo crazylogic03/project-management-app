@@ -15,7 +15,7 @@ const InviteModal = ({ isOpen, onClose, boardId }) => {
         setMessage(null);
 
         try {
-            const response = await fetch('http://localhost:3000/api/invitations/send', {
+            const response = await fetch('https://project-management-app-89n4.onrender.com/api/invitations/send', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ boardId, email })

@@ -55,7 +55,7 @@ const ProjectDetails = () => {
   useEffect(() => {
     const load = async () => {
       try {
-        const res = await fetch(`http://localhost:3000/api/boards/${id}`);
+        const res = await fetch(`https://project-management-app-89n4.onrender.com/api/boards/${id}`);
         const data = await res.json();
         if (!res.ok) return;
 
@@ -78,7 +78,7 @@ const ProjectDetails = () => {
   const createList = async () => {
     if (!newListName.trim()) return alert("List name required");
 
-    const res = await fetch(`http://localhost:3000/api/lists/${project.id}`, {
+    const res = await fetch(`https://project-management-app-89n4.onrender.com/api/lists/${project.id}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ title: newListName }),
@@ -101,7 +101,7 @@ const ProjectDetails = () => {
   const createTask = async () => {
     if (!newTaskTitle.trim()) return alert("Task title required");
 
-    const res = await fetch(`http://localhost:3000/api/cards/${currentList}`, {
+    const res = await fetch(`https://project-management-app-89n4.onrender.com/api/cards/${currentList}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -129,7 +129,7 @@ const ProjectDetails = () => {
   const deleteList = async (listId) => {
     if (!confirm("Delete this entire list?")) return;
 
-    await fetch(`http://localhost:3000/api/lists/${listId}`, {
+    await fetch(`https://project-management-app-89n4.onrender.com/api/lists/${listId}`, {
       method: "DELETE",
     });
 
@@ -167,7 +167,7 @@ const ProjectDetails = () => {
     }
 
     try {
-      await fetch(`http://localhost:3000/api/cards/${cardId}`, {
+      await fetch(`https://project-management-app-89n4.onrender.com/api/cards/${cardId}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ completed }),
@@ -205,7 +205,7 @@ const ProjectDetails = () => {
     setProject({ ...project, lists: updated });
 
     // Sync to backend
-    await fetch("http://localhost:3000/api/cards/move", {
+    await fetch("https://project-management-app-89n4.onrender.com/api/cards/move", {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -224,7 +224,7 @@ const ProjectDetails = () => {
     setShowCardModal(true);
 
     const res = await fetch(
-      `http://localhost:3000/api/cards/details/${card.id}`
+      `https://project-management-app-89n4.onrender.com/api/cards/details/${card.id}`
     );
     const data = await res.json();
 
@@ -236,7 +236,7 @@ const ProjectDetails = () => {
       UPDATE CARD TITLE
   -------------------------------------- */
   const updateCardTitle = async () => {
-    await fetch(`http://localhost:3000/api/cards/${activeCard.id}`, {
+    await fetch(`https://project-management-app-89n4.onrender.com/api/cards/${activeCard.id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ title: cardDetails.title }),
@@ -263,7 +263,7 @@ const ProjectDetails = () => {
       SAVE DESCRIPTION
   -------------------------------------- */
   const saveDescription = async () => {
-    await fetch(`http://localhost:3000/api/cards/${activeCard.id}`, {
+    await fetch(`https://project-management-app-89n4.onrender.com/api/cards/${activeCard.id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ description: descInput }),
@@ -279,7 +279,7 @@ const ProjectDetails = () => {
     if (!commentInput.trim()) return;
 
     const res = await fetch(
-      `http://localhost:3000/api/comments/${activeCard.id}`,
+      `https://project-management-app-89n4.onrender.com/api/comments/${activeCard.id}`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -302,7 +302,7 @@ const ProjectDetails = () => {
   };
 
   const deleteComment = async (commentId) => {
-    await fetch(`http://localhost:3000/api/comments/${commentId}`, {
+    await fetch(`https://project-management-app-89n4.onrender.com/api/comments/${commentId}`, {
       method: "DELETE",
     });
 
@@ -316,7 +316,7 @@ const ProjectDetails = () => {
       LABELS
   -------------------------------------- */
   const assignLabel = async (labelId) => {
-    await fetch("http://localhost:3000/api/labels/assign", {
+    await fetch("https://project-management-app-89n4.onrender.com/api/labels/assign", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ cardId: activeCard.id, labelId }),
@@ -331,7 +331,7 @@ const ProjectDetails = () => {
   };
 
   const removeLabel = async (labelId) => {
-    await fetch("http://localhost:3000/api/labels/remove", {
+    await fetch("https://project-management-app-89n4.onrender.com/api/labels/remove", {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ cardId: activeCard.id, labelId }),
@@ -349,7 +349,7 @@ const ProjectDetails = () => {
   const deleteTask = async () => {
     if (!confirm("Delete this task?")) return;
 
-    await fetch(`http://localhost:3000/api/cards/${activeCard.id}`, {
+    await fetch(`https://project-management-app-89n4.onrender.com/api/cards/${activeCard.id}`, {
       method: "DELETE",
     });
 
@@ -377,7 +377,7 @@ const ProjectDetails = () => {
 
     setIsSearching(true);
     try {
-      const res = await fetch(`http://localhost:3000/api/users/search?query=${query}`);
+      const res = await fetch(`https://project-management-app-89n4.onrender.com/api/users/search?query=${query}`);
       const data = await res.json();
       setSearchResults(data);
     } catch (err) {
@@ -389,7 +389,7 @@ const ProjectDetails = () => {
 
   const addMember = async (userId) => {
     try {
-      const res = await fetch(`http://localhost:3000/api/boards/${project.id}/members`, {
+      const res = await fetch(`https://project-management-app-89n4.onrender.com/api/boards/${project.id}/members`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ userId, role: "viewer" }),
@@ -865,7 +865,7 @@ const ProjectDetails = () => {
 
                       setCardDetails({ ...cardDetails, priority: value });
 
-                      fetch(`http://localhost:3000/api/cards/${activeCard.id}`, {
+                      fetch(`https://project-management-app-89n4.onrender.com/api/cards/${activeCard.id}`, {
                         method: "PUT",
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify({ priority: value }),
@@ -911,7 +911,7 @@ const ProjectDetails = () => {
                       const date = e.target.value;
                       setCardDetails({ ...cardDetails, dueDate: date });
 
-                      fetch(`http://localhost:3000/api/cards/${activeCard.id}`, {
+                      fetch(`https://project-management-app-89n4.onrender.com/api/cards/${activeCard.id}`, {
                         method: "PUT",
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify({ dueDate: date }),

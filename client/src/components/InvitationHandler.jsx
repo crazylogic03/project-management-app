@@ -13,7 +13,7 @@ const InvitationHandler = () => {
 
     useEffect(() => {
         // Fetch invitation details
-        fetch(`http://localhost:3000/api/invitations/${token}`)
+        fetch(`https://project-management-app-89n4.onrender.com/api/invitations/${token}`)
             .then(res => {
                 if (!res.ok) throw new Error("Invalid invitation");
                 return res.json();
@@ -46,7 +46,7 @@ const InvitationHandler = () => {
         }
 
         try {
-            const response = await fetch(`http://localhost:3000/api/invitations/${act}`, {
+            const response = await fetch(`https://project-management-app-89n4.onrender.com/api/invitations/${act}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ token, userId: user.id })

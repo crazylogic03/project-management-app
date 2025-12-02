@@ -43,7 +43,7 @@ const Reports = () => {
 
     useEffect(() => {
         // Fetch all projects
-        fetch("http://localhost:3000/api/boards")
+        fetch("https://project-management-app-89n4.onrender.com/api/boards")
             .then(res => res.json())
             .then(data => {
                 if (Array.isArray(data)) {
@@ -57,7 +57,7 @@ const Reports = () => {
     }, []);
 
     const fetchProjectDetails = (projectId) => {
-        fetch(`http://localhost:3000/api/boards/${projectId}`)
+        fetch(`https://project-management-app-89n4.onrender.com/api/boards/${projectId}`)
             .then(res => res.json())
             .then(data => {
                 setSelectedProject(data);

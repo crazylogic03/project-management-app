@@ -44,7 +44,7 @@ const Dashboard = () => {
         const token = localStorage.getItem("token");
         if (!token) return navigate("/login");
 
-        const res = await fetch("http://localhost:3000/api/users/me", {
+        const res = await fetch("https://project-management-app-89n4.onrender.com/api/users/me", {
           headers: { Authorization: `Bearer ${token}` },
         });
 
@@ -66,7 +66,7 @@ const Dashboard = () => {
 
   /* ---------------- FETCH DASHBOARD ---------------- */
   const fetchDashboard = async (userId) => {
-    const res = await fetch(`http://localhost:3000/api/dashboard/${userId}`);
+    const res = await fetch(`https://project-management-app-89n4.onrender.com/api/dashboard/${userId}`);
     const data = await res.json();
 
     setTasks(data.tasks || []);
@@ -77,7 +77,7 @@ const Dashboard = () => {
   /* ---------------- LOGOUT ---------------- */
   const handleLogout = async () => {
     localStorage.clear();
-    await fetch("http://localhost:3000/api/users/logout", { credentials: "include" });
+    await fetch("https://project-management-app-89n4.onrender.com/api/users/logout", { credentials: "include" });
     navigate("/login");
   };
 

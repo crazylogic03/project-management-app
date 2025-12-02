@@ -12,7 +12,7 @@ const SignInPage = () => {
     const password = e.target[1].value;
 
     try {
-      const res = await fetch("http://localhost:3000/api/users/login", {
+      const res = await fetch("https://project-management-app-89n4.onrender.com/api/users/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
@@ -36,7 +36,7 @@ const SignInPage = () => {
   };
 
   const handleGoogleLogin = () => {
-    window.open("http://localhost:3000/api/users/google", "_self");
+    window.open("https://project-management-app-89n4.onrender.com/api/users/google", "_self");
   };
 
   return (

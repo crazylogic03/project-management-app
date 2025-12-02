@@ -42,7 +42,7 @@ const Projects = () => {
       if (!user) return navigate("/login");
 
       try {
-        const res = await fetch(`http://localhost:3000/api/boards?userId=${user.id}`);
+        const res = await fetch(`https://project-management-app-89n4.onrender.com/api/boards?userId=${user.id}`);
         const data = await res.json();
 
         const mapped = data.map((b, index) => ({
@@ -110,7 +110,7 @@ const Projects = () => {
           : "COMPLETED";
 
     try {
-      const res = await fetch("http://localhost:3000/api/boards", {
+      const res = await fetch("https://project-management-app-89n4.onrender.com/api/boards", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -168,7 +168,7 @@ const Projects = () => {
     }
 
     try {
-      const res = await fetch(`http://localhost:3000/api/boards/${projectId}`, {
+      const res = await fetch(`https://project-management-app-89n4.onrender.com/api/boards/${projectId}`, {
         method: "DELETE",
       });
 

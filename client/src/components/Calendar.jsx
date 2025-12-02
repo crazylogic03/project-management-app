@@ -27,7 +27,7 @@ const Calendar = () => {
             const user = JSON.parse(localStorage.getItem("user"));
             if (!user) return;
 
-            const res = await fetch(`http://localhost:3000/api/calendar/${user.id}`);
+            const res = await fetch(`https://project-management-app-89n4.onrender.com/api/calendar/${user.id}`);
             const data = await res.json();
             setEvents(data);
         };

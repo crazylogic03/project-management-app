@@ -5,7 +5,7 @@ import "../styles/Chat.css";
 import { Send, Search, Edit, Phone, Video, MoreVertical, Paperclip, Smile, Mic } from "lucide-react";
 
 // Initialize socket outside component to prevent multiple connections
-const socket = io("http://localhost:3000");
+const socket = io("https://project-management-app-89n4.onrender.com");
 
 const Chat = () => {
     const [activeChat, setActiveChat] = useState({ type: 'global', id: 'global', name: 'Global Team Chat' });
@@ -31,7 +31,7 @@ const Chat = () => {
 
     useEffect(() => {
         // Fetch users
-        fetch("http://localhost:3000/api/users")
+        fetch("https://project-management-app-89n4.onrender.com/api/users")
             .then((res) => res.json())
             .then((data) => {
                 if (Array.isArray(data)) {
@@ -44,7 +44,7 @@ const Chat = () => {
             .catch((err) => console.error("Error loading users:", err));
 
         // Fetch projects
-        fetch("http://localhost:3000/api/boards")
+        fetch("https://project-management-app-89n4.onrender.com/api/boards")
             .then((res) => res.json())
             .then((data) => {
                 if (Array.isArray(data)) {
@@ -61,7 +61,7 @@ const Chat = () => {
         if (!user) return;
 
         // Load messages for active chat
-        let url = "http://localhost:3000/api/messages";
+        let url = "https://project-management-app-89n4.onrender.com/api/messages";
         if (activeChat.type === 'project') {
             url += `?projectId=${activeChat.id}`;
         } else if (activeChat.type === 'user') {

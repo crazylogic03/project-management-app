@@ -53,7 +53,7 @@ export default function SettingsPage() {
 		async function loadSettings() {
 			if (!user?.id) return navigate("/login");
 
-			const res = await fetch(`http://localhost:3000/api/settings/${user.id}`);
+			const res = await fetch(`https://project-management-app-89n4.onrender.com/api/settings/${user.id}`);
 			const data = await res.json();
 
 			if (!res.ok) return alert("Error loading settings");
@@ -106,7 +106,7 @@ export default function SettingsPage() {
 		e.preventDefault();
 		setSaving(true);
 
-		const res = await fetch(`http://localhost:3000/api/settings/${user.id}`, {
+		const res = await fetch(`https://project-management-app-89n4.onrender.com/api/settings/${user.id}`, {
 			method: "PUT",
 			headers: { "Content-Type": "application/json" },
 			body: JSON.stringify({
@@ -134,7 +134,7 @@ export default function SettingsPage() {
 			return;
 		}
 
-		await fetch(`http://localhost:3000/api/settings/${user.id}`, {
+		await fetch(`https://project-management-app-89n4.onrender.com/api/settings/${user.id}`, {
 			method: "PUT",
 			headers: { "Content-Type": "application/json" },
 			body: JSON.stringify({ password: passwordData.new })
