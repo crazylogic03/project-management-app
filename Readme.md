@@ -1,100 +1,129 @@
-# 🧩 Project Management Web App
+# 🚀 Project Manager: Full-Stack Collaboration Platform
 
-A **full-featured project management platform** designed to streamline task organization, team collaboration, progress tracking, and productivity insights — all in one place.
-
----
-
-## 🚧 Current Progress
-✅ **Login (Frontend)**  
-✅ **Dashboard (Frontend)**  
-🔜 **All other modules are in development**
+A comprehensive **full-stack collaboration and project management system** designed to empower distributed teams with real-time communication, task tracking, calendar scheduling, and analytics.  
+Built using **React, Node.js, Express, Prisma, and Socket.io**, this platform delivers modern tools for productivity and seamless teamwork.
 
 ---
 
-## 🛠️ Tech Stack
+## ✨ Features
 
-### **Frontend**
-- ⚛️ **React.js** — UI development  
-- ⚡ **Vite** — Fast build tool  
-- 🎨 **Tailwind CSS** — Styling  
-- 🧭 **React Router DOM** — Navigation  
-- 📈 **Recharts / Chart.js** — Reports & analytics  
-- 💬 **Lucide React** — UI icons  
-
-### **Backend (Planned)**
-- 🟢 **Node.js + Express.js** — Server framework  
-- 🍃 **Prisma ORM** — Database ORM  
-- 🧠 **JWT Authentication** — Secure login/signup  
-- 📤 **Nodemailer** — Email invitations & notifications  
-- 📡 **WebSockets (Socket.io)** — Real-time updates  
-
-### **Other Tools**
-- ☁️ **Vercel** — Deployment  
-- 🧱 **Render / Railway** — Backend Deployment  
+### 📋 1. Project & Task Management (Kanban Board)
+- Dynamic **Kanban Board** with drag-and-drop (react-beautiful-dnd / @hello-pangea/dnd)
+- Full CRUD for:
+  - Boards  
+  - Lists (columns)  
+  - Tasks (cards)
+- Advanced Task Modal:
+  - Description editing
+  - Priority (High / Medium / Low)
+  - Due date selection
+  - Labels add/remove
+  - Status toggle (Completed/Pending)
+- Real-time **Activity Logging** shown in Dashboard & Project Details
 
 ---
 
-## 🧭 Project Progress Overview
-
-### ✅ **Completed So Far**
-| Module | Status | Description |
-|:--------|:--------|:-------------|
-| **Login Page (Frontend)** | ✅ Done | Built using React + Tailwind. Users can log in with credentials. Basic UI completed. |
-| **Dashboard (Frontend)** | ✅ Done | Displays task overview widgets, upcoming deadlines, and progress cards. |
-| **UI Theme & Styling** | ✅ Done | Tailwind CSS setup with responsive design and reusable components. |
+### 🗓️ 2. Calendar & Notifications
+- Monthly Calendar to view/manage tasks & events  
+- Drag & drop to change event/task due dates  
+- **Desktop Notifications** using the Notification API for upcoming tasks  
+- User-configurable reminders (e.g., notify 15 minutes before)
 
 ---
 
-## 👨‍💻 **Team & Work Distribution**
-| Team Member | Area of Work | Current Status |
-|:-------------|:--------------|:----------------|
-| **Spruha** | Frontend Development (Login & Dashboard) | ✅ Completed — working UI and navigation. |
-| **Karthikeya & Thrishul** | Backend Setup (Supabase / Node.js + Express) | ⏳ In Progress — database schema & API development. |
-| **Vamsi** | UI/UX & Components Design | ⏳ In Progress — designing layouts and task pages. |
-| **Thrishul** | Task & Project Management Logic | ⏳ Pending — to start after backend integration is ready. |
+### 💬 3. Real-time Chat
+- Powered by **Socket.io**
+- Supports:
+  - Global Team Chat
+  - Direct Messages (DMs)
+  - Project-Specific Chat Rooms
+- File & Image sharing in chat
 
 ---
 
-## 🎯 **Next Targets / Upcoming Work**
-| Feature / Task | Description | Status / Assigned To |
-|:----------------|:-------------|:----------------------|
-| **Project CRUD Module** | Implement Create, Read, Update, Delete functionality for projects. | ⏳ Everyone is working on different pages. |
-| **Dashboard Routing** | Set up routing and navigation between components. | 🧑‍💻 Spruha |
-| **Project Details Page & Route** | Add individual project pages showing task lists and progress. | 🧑‍💻 Karthikeya |
-| **Kanban Board View** | Drag-and-drop tasks between columns (“To Do”, “In Progress”, etc.). | ⏳ In Progress |
-| **Calendar View** | Visualize tasks/events on a calendar (daily, weekly, monthly). | 🧑‍💻 Vamsi |
-| **Notifications System** | In-app notification system for deadlines, mentions, etc. | 🧑‍💻 Thrishul |
-| **Login Backend (OAuth)** | Set up backend authentication with JWT/OAuth. | 🧑‍💻 Thrishul |
+### 👤 4. Authentication & User Management
+- JWT-based Sign Up / Sign In  
+- Secure password hashing using Bcrypt  
+- **Google OAuth** login via Passport.js  
+- User Profile & Settings page:
+  - Update profile details
+  - Manage notification preferences
+  - Change password
+- User search & project board invitations
 
 ---
 
-## ⚙️ **Setup Guide (For Developers)**
+### 📊 5. Dashboard & Reporting
+- Overview stats: Total Boards, Active Tasks, Completed Tasks  
+- Upcoming Deadlines with countdown timer  
+- Board completion progress visualization  
+- **Reports Page** using Recharts:
+  - Task Status Distribution — Pie Chart  
+  - Priority Breakdown — Bar Chart  
+  - Activity Trends — Line Chart  
 
-Follow these steps to set up and run the **Project Management Web App** locally.
+---
 
-### 🧾 Step 1: Fork or Clone the Repository
-- **Option 1: Fork**
-  1. Click the **“Fork”** button on the top-right of this repository.
-  2. Select your GitHub account to fork it.
+## 🏗️ Project Structure
 
-- **Option 2: Clone**
-  ```bash
-  git clone https://github.com/<your-username>/<repo-name>.git
-  cd <repo-name>
+├── client/ # Frontend (React App)
+│ ├── public/
+│ ├── src/
+│ │ ├── assets/
+│ │ ├── components/
+│ │ │ ├── Calendar.jsx
+│ │ │ ├── Chat.jsx
+│ │ │ ├── ProjectDetails.jsx
+│ │ │ ├── Projects.jsx
+│ │ │ ├── Sidebar.jsx
+│ │ │ └── Dashboard/Reports/Settings
+│ │ ├── context/
+│ │ ├── styles/
+│ │ └── App.jsx
+│
+└── server/ # Backend (Node/Express/Prisma)
+├── controllers/
+│ ├── userController.js
+│ ├── messageController.js
+│ └── invitationController.js
+├── middlewares/
+│ └── authMiddleware.js
+├── routes/
+│ ├── userRoutes.js
+│ ├── boards.js
+│ ├── cards.js
+│ └── lists.js
+├── prisma/
+├── server.js
+└── passport.js
 
-### 🧾 Step 2: Install Dependencies
-    Node.js (>=18) and run  npm install
-### 🧾 Step 3: Set Up Your .env (Only For Contributes)
-### 🧾 Step 4: Run Frontend 
-    cd client
-    npm install
-    npm run dev
-### 🧾 Step 5: Run Backend
-    cd server
-    npm install
-    npm run dev
+---
+
+## 💻 Local Setup
+
+### Backend Setup
+```bash
+cd server
+npm install
+
+**Set UP .env**
+Add required variables to .env
+JWT_SECRET, DATABASE_URL, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET
+
+npx prisma migrate dev --name init
+npm start
 
 
+### Frontend Setup
+cd client
+npm install
+npm run dev
+
+
+🧪 Test Credentials
+| Role                 | Email                                                 | Password    | Notes                               |
+| -------------------- | ----------------------------------------------------- | ----------- | ----------------------------------- |
+| Test User 1 (Admin)  | [testuser1@example.com](mailto:testuser1@example.com) | password123 | For creating boards, managing tasks For invites & DM testing      |
 
 
 
