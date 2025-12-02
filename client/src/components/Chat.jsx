@@ -4,21 +4,28 @@ import Sidebar from "./Sidebar";
 import "../styles/Chat.css";
 import { Send, Search, Edit, Phone, Video, MoreVertical, Paperclip, Smile, Mic } from "lucide-react";
 
+// Initialize socket outside component to prevent multiple connections
 const socket = io("http://localhost:3000");
 
-export default function Chat() {
+const Chat = () => {
+    const [activeChat, setActiveChat] = useState({ type: 'global', id: 'global', name: 'Global Team Chat' });
     const [messages, setMessages] = useState([]);
     const [newMessage, setNewMessage] = useState("");
-    const [user, setUser] = useState(null);
     const [users, setUsers] = useState([]);
     const [projects, setProjects] = useState([]);
-    const [activeChat, setActiveChat] = useState({ type: 'global', id: 'global', name: 'Global Team Chat' });
+    const [user, setUser] = useState(null); // Current user
     const messagesEndRef = useRef(null);
+    const fileInputRef = useRef(null);
 
+    // Fetch current user (mock or from local storage/context)
     useEffect(() => {
+        // In a real app, this would come from auth context
+        // For now, fetching the first user as "me" or using a hardcoded ID
         const storedUser = JSON.parse(localStorage.getItem("user"));
         if (storedUser) {
             setUser(storedUser);
+        } else {
+            // Fallback or redirect to login
         }
     }, []);
 
@@ -26,13 +33,27 @@ export default function Chat() {
         // Fetch users
         fetch("http://localhost:3000/api/users")
             .then((res) => res.json())
-            .then((data) => setUsers(data))
+            .then((data) => {
+                if (Array.isArray(data)) {
+                    setUsers(data);
+                } else {
+                    console.error("Expected users to be an array, got:", data);
+                    setUsers([]);
+                }
+            })
             .catch((err) => console.error("Error loading users:", err));
 
         // Fetch projects
         fetch("http://localhost:3000/api/boards")
             .then((res) => res.json())
-            .then((data) => setProjects(data))
+            .then((data) => {
+                if (Array.isArray(data)) {
+                    setProjects(data);
+                } else {
+                    console.error("Expected projects to be an array, got:", data);
+                    setProjects([]);
+                }
+            })
             .catch((err) => console.error("Error loading projects:", err));
     }, []);
 
@@ -51,23 +72,27 @@ export default function Chat() {
 
         fetch(url)
             .then((res) => res.json())
-            .then((data) => setMessages(data))
+            .then((data) => {
+                if (Array.isArray(data)) {
+                    setMessages(data);
+                } else {
+                    console.error("Expected messages to be an array, got:", data);
+                    setMessages([]);
+                }
+            })
             .catch((err) => console.error("Error loading messages:", err));
 
         // Join room
         if (activeChat.type === 'project') {
-            socket.emit("join-project", activeChat.id);
+            socket.emit("join-room", activeChat.id);
         } else if (activeChat.type === 'user') {
-            socket.emit("join-user", user.id); // Ensure I am in my own room to receive DMs
+            socket.emit("join-room", `user-${user.id}`);
         } else {
-            socket.emit("join-project", "global");
+            socket.emit("join-room", "global");
         }
 
-    }, [activeChat, user]);
-
-    useEffect(() => {
-        socket.on("receive-message", (message) => {
-            // Only add message if it belongs to current chat
+        const handleReceiveMessage = (message) => {
+            // Filter messages based on active chat
             if (activeChat.type === 'project' && message.projectId === activeChat.id) {
                 setMessages((prev) => [...prev, message]);
             } else if (activeChat.type === 'user' && (message.userId === activeChat.id || message.recipientId === activeChat.id)) {
@@ -75,12 +100,14 @@ export default function Chat() {
             } else if (activeChat.type === 'global' && !message.projectId && !message.recipientId) {
                 setMessages((prev) => [...prev, message]);
             }
-        });
+        };
+
+        socket.on("receive-message", handleReceiveMessage);
 
         return () => {
-            socket.off("receive-message");
+            socket.off("receive-message", handleReceiveMessage);
         };
-    }, [activeChat]);
+    }, [activeChat, user]);
 
     useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -88,7 +115,7 @@ export default function Chat() {
 
     const handleSendMessage = (e) => {
         e.preventDefault();
-        if (!newMessage.trim() || !user) return;
+        if ((!newMessage.trim()) || !user) return;
 
         const messageData = {
             userId: user.id,
@@ -107,8 +134,35 @@ export default function Chat() {
         setNewMessage("");
     };
 
+    const handleFileUpload = (e) => {
+        const file = e.target.files[0];
+        if (!file || !user) return;
+
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => {
+            const messageData = {
+                userId: user.id,
+                messageText: "", // Optional text with file
+                attachmentUrl: reader.result,
+                fileName: file.name,
+                fileType: file.type
+            };
+
+            if (activeChat.type === 'project') {
+                messageData.projectId = activeChat.id;
+            } else if (activeChat.type === 'user') {
+                messageData.recipientId = activeChat.id;
+            } else {
+                messageData.projectId = "global";
+            }
+
+            socket.emit("send-message", messageData);
+        };
+    };
+
     return (
-        <div className="dashboard-container">
+        <div>
             <Sidebar />
             <main className="chat-layout">
 
@@ -141,14 +195,14 @@ export default function Chat() {
                                     <span className="chat-item-name">Global Chat</span>
                                 </div>
                             </div>
-                            {projects.map(p => (
+                            {Array.isArray(projects) && projects.map(p => (
                                 <div
                                     key={`project-${p.id}`}
                                     className={`chat-item ${activeChat.type === 'project' && activeChat.id === p.id ? 'active' : ''}`}
                                     onClick={() => setActiveChat({ type: 'project', id: p.id, name: p.title })}
                                 >
                                     <div className="chat-item-avatar">
-                                        <div className="avatar-circle">{p.title.charAt(0).toUpperCase()}</div>
+                                        <div className="avatar-circle">{p.title?.charAt(0).toUpperCase()}</div>
                                     </div>
                                     <div className="chat-item-info">
                                         <span className="chat-item-name">{p.title}</span>
@@ -161,14 +215,14 @@ export default function Chat() {
                     <div className="chat-list-section">
                         <h3>Direct Messages</h3>
                         <div className="chat-list">
-                            {users.filter(u => u.id !== user?.id).map(u => (
+                            {Array.isArray(users) && users.filter(u => u.id !== user?.id).map(u => (
                                 <div
                                     key={`user-${u.id}`}
                                     className={`chat-item ${activeChat.type === 'user' && activeChat.id === u.id ? 'active' : ''}`}
                                     onClick={() => setActiveChat({ type: 'user', id: u.id, name: u.name })}
                                 >
                                     <div className="chat-item-avatar">
-                                        {u.profilePic ? <img src={u.profilePic} alt={u.name} /> : u.name.charAt(0).toUpperCase()}
+                                        {u.profilePic ? <img src={u.profilePic} alt={u.name} /> : u.name?.charAt(0).toUpperCase()}
                                         <span className="status-dot online"></span>
                                     </div>
                                     <div className="chat-item-info">
@@ -190,7 +244,7 @@ export default function Chat() {
                     <header className="chat-main-header">
                         <div className="chat-header-user">
                             <div className="chat-header-avatar">
-                                <div className="avatar-circle">{activeChat.name.charAt(0).toUpperCase()}</div>
+                                <div className="avatar-circle">{activeChat.name?.charAt(0).toUpperCase()}</div>
                             </div>
                             <div className="chat-header-info">
                                 <h3>{activeChat.name}</h3>
@@ -208,7 +262,8 @@ export default function Chat() {
                             <span>Today</span>
                         </div>
 
-                        {messages.map((msg, index) => {
+                        {Array.isArray(messages) && messages.map((msg, index) => {
+                            if (!msg) return null;
                             const isMe = user && msg.userId === user.id;
                             return (
                                 <div key={index} className={`chat-bubble-row ${isMe ? "me" : "other"}`}>
@@ -220,10 +275,21 @@ export default function Chat() {
                                     <div className="chat-bubble-content">
                                         {!isMe && <span className="sender-name">{msg.user?.name}</span>}
                                         <div className="chat-bubble">
+                                            {msg.attachmentUrl && (
+                                                <div className="chat-attachment">
+                                                    {typeof msg.fileType === 'string' && msg.fileType.startsWith("image/") ? (
+                                                        <img src={msg.attachmentUrl} alt="attachment" className="chat-image-preview" style={{ maxWidth: "200px", borderRadius: "8px", marginBottom: "5px" }} />
+                                                    ) : (
+                                                        <a href={msg.attachmentUrl} download={msg.fileName || "attachment"} className="chat-file-link" style={{ color: "white", textDecoration: "underline" }}>
+                                                            📎 {msg.fileName || "Attachment"}
+                                                        </a>
+                                                    )}
+                                                </div>
+                                            )}
                                             {msg.content}
                                         </div>
                                         <span className="chat-time">
-                                            {new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                            {msg.createdAt ? new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ""}
                                         </span>
                                     </div>
                                 </div>
@@ -233,7 +299,15 @@ export default function Chat() {
                     </div>
 
                     <div className="chat-input-wrapper">
-                        <button className="icon-btn"><Paperclip size={20} /></button>
+                        <input
+                            type="file"
+                            ref={fileInputRef}
+                            style={{ display: "none" }}
+                            onChange={handleFileUpload}
+                        />
+                        <button className="icon-btn" onClick={() => fileInputRef.current.click()}>
+                            <Paperclip size={20} />
+                        </button>
                         <form className="chat-input-form" onSubmit={handleSendMessage}>
                             <input
                                 type="text"
@@ -251,4 +325,6 @@ export default function Chat() {
             </main>
         </div>
     );
-}
+};
+
+export default Chat;

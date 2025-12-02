@@ -92,17 +92,20 @@ io.on("connection", (socket) => {
   });
 
   socket.on("send-message", async (data) => {
-    // data: { userId, projectId, recipientId, messageText }
+    // data: { userId, projectId, recipientId, messageText, attachmentUrl, fileName, fileType }
     try {
-      const { userId, projectId, recipientId, messageText } = data;
+      const { userId, projectId, recipientId, messageText, attachmentUrl, fileName, fileType } = data;
 
       // Save to DB
       const newMessage = await prisma.message.create({
         data: {
-          content: messageText,
+          content: messageText || "", // Allow empty content if there's an attachment
           userId: userId,
           projectId: projectId ? parseInt(projectId) : null,
-          recipientId: recipientId ? parseInt(recipientId) : null
+          recipientId: recipientId ? parseInt(recipientId) : null,
+          attachmentUrl,
+          fileName,
+          fileType
         },
         include: {
           user: {
@@ -116,8 +119,6 @@ io.on("connection", (socket) => {
         io.to(projectId).emit("receive-message", newMessage);
       } else if (recipientId) {
         // DM logic: emit to both sender and recipient
-        // We need a way to map userIds to socketIds or just use a room for the user
-        // For simplicity, let's assume users join a room "user-{id}"
         io.to(`user-${recipientId}`).emit("receive-message", newMessage);
         io.to(`user-${userId}`).emit("receive-message", newMessage);
       } else {
