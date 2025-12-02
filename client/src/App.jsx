@@ -9,6 +9,8 @@ import Projects from "./components/Projects";
 import ProjectDetail from "./components/ProjectDetails";
 import TaskDetails from "./components/TaskDetails";
 import Calendar from "./components/Calendar";
+import Chat from "./components/Chat";
+import InvitationHandler from "./components/InvitationHandler";
 import { ThemeProvider } from "./context/ThemeContext";
 
 function App() {
@@ -26,6 +28,9 @@ function App() {
           <Route path="/project-detail/:id" element={<ProjectDetail />} />
           <Route path="/task-detail" element={<TaskDetails />} />
           <Route path="/calendar" element={<Calendar />} />
+          <Route path="/chat" element={<Chat />} />
+          <Route path="/invite/:token" element={<InvitationHandler />} />
+          <Route path="/invite/:token/:action" element={<InvitationHandler />} />
           <Route path="*" element={<Navigate to="/signup" />} />
 
         </Routes>

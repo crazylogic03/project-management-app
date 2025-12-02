@@ -5,6 +5,8 @@ import { CalendarDays, Users, Plus, Trash2 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useTheme } from "../context/ThemeContext";
 
+import InviteModal from "./InviteModal";
+
 const Projects = () => {
   const { darkMode } = useTheme();
   const navigate = useNavigate();
@@ -12,6 +14,8 @@ const Projects = () => {
   const [projects, setProjects] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [showInviteModal, setShowInviteModal] = useState(false);
+  const [inviteBoardId, setInviteBoardId] = useState(null);
   const [dropdownPos, setDropdownPos] = useState({ top: 0, left: 0 });
   const dropdownRef = useRef(null);
 
@@ -313,9 +317,36 @@ const Projects = () => {
               >
                 View Project →
               </Link>
+              <button
+                className="invite-btn-card"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setInviteBoardId(project.id);
+                  setShowInviteModal(true);
+                }}
+                style={{
+                  marginTop: '10px',
+                  width: '100%',
+                  padding: '8px',
+                  backgroundColor: 'transparent',
+                  border: `1px dashed ${project.border}`,
+                  borderRadius: '8px',
+                  cursor: 'pointer',
+                  color: '#555',
+                  fontSize: '13px'
+                }}
+              >
+                + Invite Member
+              </button>
             </div>
           ))}
         </div>
+
+        <InviteModal
+          isOpen={showInviteModal}
+          onClose={() => setShowInviteModal(false)}
+          boardId={inviteBoardId}
+        />
 
       </main>
     </div>

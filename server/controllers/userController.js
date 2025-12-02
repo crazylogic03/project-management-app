@@ -101,3 +101,21 @@ exports.searchUsers = async (req, res) => {
     res.status(500).json({ message: "Server error during search" });
   }
 };
+
+// ✅ Get All Users Controller
+exports.getAllUsers = async (req, res) => {
+  try {
+    const users = await prisma.user.findMany({
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        profilePic: true
+      }
+    });
+    res.json(users);
+  } catch (err) {
+    console.error("Error fetching users:", err);
+    res.status(500).json({ message: "Server error fetching users" });
+  }
+};

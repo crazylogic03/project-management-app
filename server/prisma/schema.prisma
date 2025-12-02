@@ -30,6 +30,8 @@ model User {
   memberships BoardMember[]
   comments    Comment[]
   activities  Activity[]
+  messages    Message[]
+  receivedMessages Message[] @relation("ReceivedMessages")
   createdAt   DateTime      @default(now())
 }
 
@@ -52,6 +54,8 @@ model Board {
   labels       Label[]
   attachments  Attachment[]
   cards        Card[]
+  messages     Message[]
+  invitations  Invitation[]
   color String? 
 }
 
@@ -164,4 +168,25 @@ model Event {
   reminder    Int?
   notified    Boolean  @default(false)
   createdAt  DateTime @default(now())
+}
+model Message {
+  id        Int      @id @default(autoincrement())
+  content   String   @db.LongText
+  createdAt DateTime @default(now())
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  projectId Int?
+  project   Board?   @relation(fields: [projectId], references: [id])
+  recipientId Int?
+  recipient User?    @relation("ReceivedMessages", fields: [recipientId], references: [id])
+}
+
+model Invitation {
+  id        Int      @id @default(autoincrement())
+  email     String
+  token     String   @unique
+  boardId   Int
+  board     Board    @relation(fields: [boardId], references: [id], onDelete: Cascade)
+  status    String   @default("pending") // pending, accepted, declined
+  createdAt DateTime @default(now())
 }
