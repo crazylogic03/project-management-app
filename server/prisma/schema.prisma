@@ -179,6 +179,9 @@ model Message {
   project   Board?   @relation(fields: [projectId], references: [id])
   recipientId Int?
   recipient User?    @relation("ReceivedMessages", fields: [recipientId], references: [id])
+  attachmentUrl String? @db.LongText
+  fileName      String?
+  fileType      String?
 }
 
 model Invitation {
