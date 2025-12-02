@@ -1,36 +1,32 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
 model User {
-  id          Int           @id @default(autoincrement())
-  name        String
-  email       String        @unique
-  password    String?
-  googleId    String?       @unique
-  profilePic  String?       @db.LongText
-  phone       String?
-  country     String?
-  city        String?
-  zipCode     String?
-  notifications Json?
-  preferences   Json?
-  boards      Board[]    @relation("BoardOwner")
-  memberships BoardMember[]
-  comments    Comment[]
-  activities  Activity[]
-  createdAt   DateTime      @default(now())
+  id               Int           @id @default(autoincrement())
+  name             String
+  email            String        @unique
+  password         String?
+  googleId         String?       @unique
+  profilePic       String?       @db.Text
+  phone            String?
+  country          String?
+  city             String?
+  zipCode          String?
+  notifications    Json?
+  preferences      Json?
+  boards           Board[]       @relation("BoardOwner")
+  memberships      BoardMember[]
+  comments         Comment[]
+  activities       Activity[]
+  messages         Message[]
+  receivedMessages Message[]     @relation("ReceivedMessages")
+  createdAt        DateTime      @default(now())
 }
 
 model Board {
@@ -51,8 +47,10 @@ model Board {
   comments     Comment[]
   labels       Label[]
   attachments  Attachment[]
-  cards        Card[]
-  color String? 
+  cards        Card[] // Added missing opposite relation
+  messages     Message[]
+  invitations  Invitation[]
+  color        String?
 }
 
 model BoardMember {
@@ -98,7 +96,7 @@ model Card {
 
 model Comment {
   id        Int      @id @default(autoincrement())
-  content   String
+  content   String   @db.Text
   createdAt DateTime @default(now())
   userId    Int
   user      User     @relation(fields: [userId], references: [id])
@@ -117,12 +115,10 @@ model Activity {
   userId    Int?
   createdAt DateTime @default(now())
 
-  user      User?    @relation(fields: [userId], references: [id])
-  board     Board?   @relation(fields: [boardId], references: [id], onDelete: Cascade)
-  card      Card?    @relation(fields: [cardId], references: [id], onDelete: Cascade)
+  user  User?  @relation(fields: [userId], references: [id])
+  board Board? @relation(fields: [boardId], references: [id], onDelete: Cascade)
+  card  Card?  @relation(fields: [cardId], references: [id], onDelete: Cascade)
 }
-
-
 
 model Label {
   id      Int         @id @default(autoincrement())
@@ -152,16 +148,42 @@ model Attachment {
   cardId    Int?
   card      Card?    @relation(fields: [cardId], references: [id], onDelete: Cascade)
 }
+
 model Event {
   id          Int      @id @default(autoincrement())
   title       String
   description String?
   date        DateTime
-  type        String   // task, meeting, deadline
+  type        String
   priority    String?
   project     String?
   assignee    String?
   reminder    Int?
   notified    Boolean  @default(false)
-  createdAt  DateTime @default(now())
+  createdAt   DateTime @default(now())
+}
+
+model Message {
+  id            Int      @id @default(autoincrement())
+  content       String   @db.Text
+  createdAt     DateTime @default(now())
+  userId        Int
+  user          User     @relation(fields: [userId], references: [id])
+  projectId     Int?
+  project       Board?   @relation(fields: [projectId], references: [id])
+  recipientId   Int?
+  recipient     User?    @relation("ReceivedMessages", fields: [recipientId], references: [id])
+  attachmentUrl String?  @db.Text
+  fileName      String?
+  fileType      String?
+}
+
+model Invitation {
+  id        Int      @id @default(autoincrement())
+  email     String
+  token     String   @unique
+  boardId   Int
+  board     Board    @relation(fields: [boardId], references: [id], onDelete: Cascade)
+  status    String   @default("pending")
+  createdAt DateTime @default(now())
 }

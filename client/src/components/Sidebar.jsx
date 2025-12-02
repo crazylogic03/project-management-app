@@ -8,6 +8,7 @@ import {
   BarChart3,
   FileStack,
   HelpCircle,
+  MessageSquare,
   Settings
 } from "lucide-react";
 
@@ -32,8 +33,13 @@ const Sidebar = () => {
         <NavLink to="/calendar" className="sidebar-link">
           <CalendarDays size={20} /> Calendar
         </NavLink>
-        <a className="sidebar-link"><BarChart3 size={20} /> Reports</a>
-        <a className="sidebar-link"><FileStack size={20} /> Files</a>
+        <NavLink to="/reports" className="sidebar-link">
+          <BarChart3 size={20} /> Reports
+        </NavLink>
+        <NavLink to="/chat" className="sidebar-link">
+          <MessageSquare size={20} /> Messages
+        </NavLink>
+
 
         <NavLink to="/settings" className="sidebar-link">
           <Settings size={20} /> Settings
