@@ -34,16 +34,24 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: ["http://localhost:5173", "http://localhost:5174"],
+    origin: ["https://project-management-app-tau-six.vercel.app"],
     methods: ["GET", "POST"],
     credentials: true
   }
 });
 
-app.use(cors({
-  origin: ["http://localhost:5173", "http://localhost:5174"],
-  credentials: true,
-}));
+app.use(
+  cors({
+    origin: [
+      "https://project-management-app-tau-six.vercel.app",
+      "http://localhost:5173"
+    ],
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"]
+  })
+);
+
 
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ limit: "50mb", extended: true }));
@@ -55,10 +63,11 @@ app.use(
     resave: false,
     saveUninitialized: false,
     cookie: {
-      secure: false,
+      secure: true,
       httpOnly: true,
-      sameSite: "lax",
-    },
+      sameSite: "none"
+    }
+    ,
   })
 );
 

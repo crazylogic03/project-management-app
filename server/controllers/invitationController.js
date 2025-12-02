@@ -47,8 +47,8 @@ exports.sendInvitation = async (req, res) => {
         });
 
         // Send email (Mock)
-        const acceptLink = `http://localhost:5174/invite/${token}/accept`;
-        const declineLink = `http://localhost:5174/invite/${token}/decline`;
+        const acceptLink = `https://project-management-app-tau-six.vercel.app/invite/${token}/accept`;
+        const declineLink = `https://project-management-app-tau-six.vercel.app/invite/${token}/decline`;
 
         console.log(`
         [MOCK EMAIL] 

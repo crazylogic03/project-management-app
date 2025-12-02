@@ -54,7 +54,7 @@ router.get(
 
 router.get(
   "/google/callback",
-  passport.authenticate("google", { failureRedirect: "http://localhost:5173/login" }),
+  passport.authenticate("google", { failureRedirect: "https://project-management-app-tau-six.vercel.app/login" }),
   (req, res) => {
     const userData = JSON.stringify({
       id: req.user.id,
@@ -65,7 +65,7 @@ router.get(
 
     const encoded = encodeURIComponent(userData);
 
-    res.redirect(`http://localhost:5173/dashboard?user=${encoded}`);
+    res.redirect(`https://project-management-app-tau-six.vercel.app/dashboard?user=${encoded}`);
   }
 );
 
