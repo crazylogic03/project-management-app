@@ -10,6 +10,7 @@ import ProjectDetail from "./components/ProjectDetails";
 import TaskDetails from "./components/TaskDetails";
 import Calendar from "./components/Calendar";
 import Chat from "./components/Chat";
+import Reports from "./components/Reports";
 import InvitationHandler from "./components/InvitationHandler";
 import { ThemeProvider } from "./context/ThemeContext";
 
@@ -28,6 +29,7 @@ function App() {
           <Route path="/project-detail/:id" element={<ProjectDetail />} />
           <Route path="/task-detail" element={<TaskDetails />} />
           <Route path="/calendar" element={<Calendar />} />
+          <Route path="/reports" element={<Reports />} />
           <Route path="/chat" element={<Chat />} />
           <Route path="/invite/:token" element={<InvitationHandler />} />
           <Route path="/invite/:token/:action" element={<InvitationHandler />} />

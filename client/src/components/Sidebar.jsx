@@ -33,7 +33,9 @@ const Sidebar = () => {
         <NavLink to="/calendar" className="sidebar-link">
           <CalendarDays size={20} /> Calendar
         </NavLink>
-        <a className="sidebar-link"><BarChart3 size={20} /> Reports</a>
+        <NavLink to="/reports" className="sidebar-link">
+          <BarChart3 size={20} /> Reports
+        </NavLink>
         <NavLink to="/chat" className="sidebar-link">
           <MessageSquare size={20} /> Messages
         </NavLink>

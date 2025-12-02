@@ -1,0 +1,239 @@
+/* Reports Layout */
+.reports-container {
+    display: flex;
+    height: 100vh;
+    background-color: #fcfcfc;
+    overflow: hidden;
+}
+
+/* Reports Sidebar (Project List) */
+.reports-sidebar {
+    width: 300px;
+    background-color: #ffffff;
+    border-right: 1px solid #f0f0f0;
+    display: flex;
+    flex-direction: column;
+    padding: 24px;
+    overflow-y: auto;
+}
+
+.reports-sidebar h2 {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.project-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.project-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    border: 1px solid transparent;
+}
+
+.project-item:hover {
+    background-color: #f5f8ff;
+}
+
+.project-item.active {
+    background-color: #e6fafa;
+    border-color: #00b9b9;
+}
+
+.project-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    background-color: #eee;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    color: #555;
+    font-size: 16px;
+}
+
+.project-info {
+    flex: 1;
+}
+
+.project-name {
+    font-weight: 600;
+    color: #333;
+    font-size: 14px;
+    display: block;
+    margin-bottom: 2px;
+}
+
+.project-meta {
+    font-size: 12px;
+    color: #888;
+}
+
+/* Main Content */
+.reports-main {
+    flex: 1;
+    padding: 32px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+}
+
+.reports-header {
+    margin-bottom: 8px;
+}
+
+.reports-header h1 {
+    font-size: 28px;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin-bottom: 8px;
+}
+
+.reports-header p {
+    color: #666;
+    font-size: 16px;
+}
+
+/* Stats Grid */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.report-stat-card {
+    background-color: #fff;
+    padding: 24px;
+    border-radius: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    border: 1px solid #f0f0f0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.stat-label {
+    font-size: 14px;
+    color: #666;
+    font-weight: 500;
+}
+
+.stat-value {
+    font-size: 32px;
+    font-weight: 700;
+    color: #333;
+}
+
+.stat-trend {
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.stat-trend.positive {
+    color: #2ecc71;
+}
+
+.stat-trend.neutral {
+    color: #999;
+}
+
+.stat-trend.negative {
+    color: #e74c3c;
+}
+
+/* Charts Section */
+.charts-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 24px;
+}
+
+.chart-card {
+    background-color: #fff;
+    padding: 24px;
+    border-radius: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    border: 1px solid #f0f0f0;
+    min-height: 350px;
+}
+
+.chart-header {
+    margin-bottom: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.chart-header h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+}
+
+/* Empty State */
+.no-selection {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #999;
+    gap: 16px;
+}
+
+.no-selection svg {
+    color: #ddd;
+}
+
+/* Dark Mode */
+body.dark-mode .reports-container {
+    background-color: var(--bg-primary);
+}
+
+body.dark-mode .reports-sidebar {
+    background-color: var(--bg-primary);
+    border-right-color: var(--border-color);
+}
+
+body.dark-mode .reports-sidebar h2,
+body.dark-mode .project-name,
+body.dark-mode .reports-header h1,
+body.dark-mode .stat-value,
+body.dark-mode .chart-header h3 {
+    color: var(--text-primary);
+}
+
+body.dark-mode .project-item:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+body.dark-mode .project-item.active {
+    background-color: rgba(0, 185, 185, 0.2);
+    border-color: #00b9b9;
+}
+
+body.dark-mode .report-stat-card,
+body.dark-mode .chart-card {
+    background-color: var(--card-bg);
+    border-color: var(--border-color);
+}
+
+body.dark-mode .stat-label,
+body.dark-mode .reports-header p,
+body.dark-mode .project-meta {
+    color: var(--text-secondary);
+}
