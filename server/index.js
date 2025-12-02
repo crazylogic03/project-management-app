@@ -25,10 +25,23 @@ const calendarRoutes = require("./routes/calendarRoutes");
 
 
 
+const http = require("http");
+const { Server } = require("socket.io");
+const { PrismaClient } = require("@prisma/client");
+const prisma = new PrismaClient();
+
 const app = express();
+const server = http.createServer(app);
+const io = new Server(server, {
+  cors: {
+    origin: ["http://localhost:5173", "http://localhost:5174"],
+    methods: ["GET", "POST"],
+    credentials: true
+  }
+});
 
 app.use(cors({
-  origin: "http://localhost:5173",
+  origin: ["http://localhost:5173", "http://localhost:5174"],
   credentials: true,
 }));
 
@@ -66,9 +79,64 @@ app.use("/api/events", require("./routes/events"));
 app.use("/api/dashboard", require("./routes/dashboard"));
 app.use("/api/calendar", calendarRoutes);
 app.use("/api/settings", require("./routes/settings"));
+app.use("/api/messages", require("./routes/messageRoutes"));
+app.use("/api/invitations", require("./routes/invitationRoutes"));
 
 
+// Socket.io Logic
+io.on("connection", (socket) => {
+  console.log("User connected:", socket.id);
 
+  socket.on("join-project", (projectId) => {
+    socket.join(projectId || "global");
+  });
+
+  socket.on("send-message", async (data) => {
+    // data: { userId, projectId, recipientId, messageText }
+    try {
+      const { userId, projectId, recipientId, messageText } = data;
+
+      // Save to DB
+      const newMessage = await prisma.message.create({
+        data: {
+          content: messageText,
+          userId: userId,
+          projectId: projectId ? parseInt(projectId) : null,
+          recipientId: recipientId ? parseInt(recipientId) : null
+        },
+        include: {
+          user: {
+            select: { id: true, name: true, profilePic: true }
+          }
+        }
+      });
+
+      // Broadcast to room
+      if (projectId) {
+        io.to(projectId).emit("receive-message", newMessage);
+      } else if (recipientId) {
+        // DM logic: emit to both sender and recipient
+        // We need a way to map userIds to socketIds or just use a room for the user
+        // For simplicity, let's assume users join a room "user-{id}"
+        io.to(`user-${recipientId}`).emit("receive-message", newMessage);
+        io.to(`user-${userId}`).emit("receive-message", newMessage);
+      } else {
+        io.to("global").emit("receive-message", newMessage);
+      }
+
+    } catch (err) {
+      console.error("Error sending message:", err);
+    }
+  });
+
+  socket.on("join-user", (userId) => {
+    socket.join(`user-${userId}`);
+  });
+
+  socket.on("disconnect", () => {
+    console.log("User disconnected:", socket.id);
+  });
+});
 
 
 app.get("/", (req, res) => {
@@ -76,4 +144,4 @@ app.get("/", (req, res) => {
 });
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+server.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
