@@ -1,9 +1,14 @@
-const express = require('express')
+const express = require('express');
 const { PrismaClient } = require("@prisma/client");
-const prisma = new PrismaClient()
+const prisma = new PrismaClient();
 const router = express.Router();
 
-/* ---------------- GET BOARDS ---------------- */
+/**
+ * GET /api/boards
+ * Retrieves all boards for a specific user or all boards if no userId provided
+ * @query {number} userId - Optional user ID to filter boards
+ * @returns {Array} List of boards with members
+ */
 router.get("/", async (req, res) => {
     try {
         const { userId } = req.query;
@@ -86,7 +91,20 @@ router.get("/:id", async (req, res) => {
     }
 });
 
-/* ---------------- CREATE BOARD ---------------- */
+
+/**
+ * POST /api/boards
+ * Creates a new board with template-based configuration
+ * @body {string} title - Board title (required)
+ * @body {string} description - Board description
+ * @body {number} userId - User ID creating the board (required)
+ * @body {string} deadline - Board deadline date
+ * @body {number} progress - Initial progress (0-100)
+ * @body {string} status - Board status
+ * @body {string} template - Template name (Todo Template, Project Template, etc.)
+ * @body {string} organization - Organization name
+ * @returns {Object} Created board with lists and cards
+ */
 router.post("/", async (req, res) => {
     try {
         const { title, description, userId, deadline, progress, status, template, organization } = req.body;
