@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import Sidebar from "./Sidebar";
 import "../styles/Projects.css";
 import { CalendarDays, Users, Plus, Trash2 } from "lucide-react";
@@ -9,6 +9,13 @@ import { TEMPLATE_INFO } from "../constants/templates";
 import InviteModal from "./InviteModal";
 
 const API_URL = import.meta.env.VITE_API_URL || "https://project-management-app-89n4.onrender.com/api";
+
+// Project color schemes - moved outside component to prevent recreation
+const PROJECT_COLORS = [
+  { bg: "#ccfafa", darkBg: "rgba(0, 185, 185, 0.15)", border: "#00b9b9" },
+  { bg: "#e5f0ff", darkBg: "rgba(122, 175, 245, 0.15)", border: "#7aaff5" },
+  { bg: "#edf4ef", darkBg: "rgba(180, 204, 185, 0.15)", border: "#b4ccb9" },
+];
 
 const Projects = () => {
   const { darkMode } = useTheme();
@@ -21,12 +28,6 @@ const Projects = () => {
   const [inviteBoardId, setInviteBoardId] = useState(null);
   const [dropdownPos, setDropdownPos] = useState({ top: 0, left: 0 });
   const dropdownRef = useRef(null);
-
-  const projectColors = [
-    { bg: "#ccfafa", darkBg: "rgba(0, 185, 185, 0.15)", border: "#00b9b9" },
-    { bg: "#e5f0ff", darkBg: "rgba(122, 175, 245, 0.15)", border: "#7aaff5" },
-    { bg: "#edf4ef", darkBg: "rgba(180, 204, 185, 0.15)", border: "#b4ccb9" },
-  ];
 
   const [formData, setFormData] = useState({
     name: "",
@@ -56,7 +57,7 @@ const Projects = () => {
           progress: b.progress,
           members: b.members?.length || 1,
           status: b.status,
-          ...projectColors[index % projectColors.length],
+          ...PROJECT_COLORS[index % PROJECT_COLORS.length],
         }));
 
         setProjects(mapped);
@@ -144,8 +145,8 @@ const Projects = () => {
         return alert(newBoard.message || "Failed to create project");
       }
 
-      const index = projects.length % projectColors.length;
-      const newColor = projectColors[index];
+      const index = projects.length % PROJECT_COLORS.length;
+      const newColor = PROJECT_COLORS[index];
 
       setProjects([
         ...projects,
