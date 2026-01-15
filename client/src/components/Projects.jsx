@@ -105,15 +105,15 @@ const Projects = () => {
 
     // Validation
     if (!formData.name || !formData.name.trim()) {
-      return alert("Project Name is required!");
+      return alert("⚠️ Project Name is required! Please enter a name for your project.");
     }
 
     if (!formData.deadline) {
-      return alert("Deadline is required!");
+      return alert("📅 Deadline is required! Please select a deadline for your project.");
     }
 
     if (!formData.template) {
-      return alert("Please select a template!");
+      return alert("📋 Please select a template! Choose a template that best fits your project needs.");
     }
 
     const mappedStatus =
@@ -174,10 +174,10 @@ const Projects = () => {
       });
 
       // Success notification
-      alert(`Project "${newBoard.title}" created successfully!`);
+      alert(`✅ Success! Project "${newBoard.title}" has been created successfully!`);
     } catch (err) {
       console.error(err);
-      alert("Failed to create project. Please try again.");
+      alert("❌ Failed to create project. Please check your connection and try again.");
     }
   };
 
