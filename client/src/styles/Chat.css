@@ -17,6 +17,8 @@
     display: flex;
     flex-direction: column;
     padding: 24px;
+    height: 100%;
+    /* Ensure full height */
 }
 
 .chat-sidebar-header {
@@ -362,10 +364,16 @@
 .chat-input-form input {
     flex: 1;
     border: none;
-    background: none;
+    background: transparent;
     padding: 10px;
     outline: none;
     font-size: 14px;
+    color: #333;
+    /* Ensure text is visible */
+}
+
+.chat-input-form input::placeholder {
+    color: #888;
 }
 
 .send-btn {
@@ -384,4 +392,56 @@
 
 .send-btn:hover {
     background-color: #1565c0;
+}
+
+/* Scrollable List Container in Sidebar */
+.chat-sidebar-scroll-area {
+    flex: 1;
+    overflow-y: auto;
+    /* Hide scrollbar for cleaner look, or style it */
+    scrollbar-width: thin;
+    padding-right: 4px;
+    /* avoid scrollbar overlapping content */
+}
+
+.chat-sidebar-scroll-area::-webkit-scrollbar {
+    width: 6px;
+}
+
+.chat-sidebar-scroll-area::-webkit-scrollbar-thumb {
+    background-color: #ddd;
+    border-radius: 3px;
+}
+
+/* Dropdown Menus (WhatsApp Style) */
+.chat-dropdown-menu {
+    position: absolute;
+    top: 40px;
+    right: 0;
+    width: 200px;
+    background: white;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    border-radius: 4px;
+    padding: 8px 0;
+    z-index: 100;
+}
+
+.chat-dropdown-menu.right {
+    right: 10px;
+}
+
+.chat-dropdown-item {
+    padding: 10px 20px;
+    font-size: 14.5px;
+    color: #3b4a54;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.chat-dropdown-item:hover {
+    background-color: #f5f6f6;
+}
+
+.chat-dropdown-item.danger {
+    color: #d32f2f;
 }
