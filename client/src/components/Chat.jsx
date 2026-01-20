@@ -5,7 +5,9 @@ import "../styles/Chat.css";
 import { Send, Search, Edit, Phone, Video, MoreVertical, Paperclip, Smile, Mic, Loader2 } from "lucide-react";
 
 // Initialize socket outside component to prevent multiple connections
+// Initialize socket using relative path (proxied)
 const socket = io();
+
 const Chat = () => {
     const [activeChat, setActiveChat] = useState({ type: 'global', id: 'global', name: 'Global Team Chat' });
     const [messages, setMessages] = useState([]);
@@ -136,14 +138,12 @@ const Chat = () => {
                 // Deduplicate by ID
                 if (prev.some(m => m.id === message.id)) return prev;
 
-                // Simple check for optimistic duplicate (same content/user within last 2 seconds)
                 const isDuplicateOptimistic = prev.some(m =>
                     m.userId === message.userId &&
                     m.content === message.content &&
                     (new Date(message.createdAt) - new Date(m.createdAt) < 2000)
                 );
 
-                // If we find a match, we could replace it, but mixing IDs is tricky.
                 let newMessages = prev;
                 if (isDuplicateOptimistic) {
                     newMessages = prev.filter(m => !(
@@ -175,6 +175,7 @@ const Chat = () => {
     }, [activeChat, user]);
 
     useEffect(() => {
+        // Use 'auto' behavior for instant scrolling, which is often more reliable than 'smooth' when rapid updates occur
         messagesEndRef.current?.scrollIntoView({ behavior: "auto" });
     }, [messages]);
 
@@ -195,6 +196,7 @@ const Chat = () => {
             messageData.projectId = "global";
         }
 
+        // Optimistic Update
         const optimisticMessage = {
             ...messageData,
             id: Date.now(), // Temp ID
@@ -217,7 +219,7 @@ const Chat = () => {
         reader.onload = () => {
             const messageData = {
                 userId: user.id,
-                messageText: "",
+                messageText: "", // Optional text with file
                 attachmentUrl: reader.result,
                 fileName: file.name,
                 fileType: file.type
@@ -279,6 +281,7 @@ const Chat = () => {
                         <div className="chat-list-section">
                             <h3>Projects</h3>
                             <div className="chat-list">
+                                {/* Global Chat always visible or filtered? Usually strictly matches query, but let's keep Global if query empty or matches 'Global' */}
                                 {("Global Team Chat".toLowerCase().includes(searchQuery.toLowerCase())) && (
                                     <div
                                         className={`chat-item ${activeChat.type === 'global' ? 'active' : ''}`}
