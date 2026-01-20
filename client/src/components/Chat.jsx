@@ -399,7 +399,13 @@ const Chat = () => {
                                                     {msg.attachmentUrl && (
                                                         <div className="chat-attachment">
                                                             {typeof msg.fileType === 'string' && msg.fileType.startsWith("image/") ? (
-                                                                <img src={msg.attachmentUrl} alt="attachment" className="chat-image-preview" style={{ maxWidth: "200px", borderRadius: "8px", marginBottom: "5px" }} />
+                                                                <img 
+                                                                    src={msg.attachmentUrl} 
+                                                                    alt="attachment" 
+                                                                    className="chat-image-preview" 
+                                                                    style={{ maxWidth: "200px", borderRadius: "8px", marginBottom: "5px" }}
+                                                                    onLoad={() => messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })}
+                                                                />
                                                             ) : (
                                                                 <a href={msg.attachmentUrl} download={msg.fileName || "attachment"} className="chat-file-link" style={{ color: "white", textDecoration: "underline" }}>
                                                                     📎 {msg.fileName || "Attachment"}

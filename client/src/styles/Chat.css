@@ -202,6 +202,8 @@
     display: flex;
     flex-direction: column;
     background-color: #fcfcfc;
+    min-width: 0;
+    /* Prevents flex item from overflowing */
 }
 
 .chat-main-header {
@@ -250,6 +252,8 @@
     display: flex;
     flex-direction: column;
     gap: 20px;
+    min-height: 0;
+    /* Critical for scrolling inside flex container */
 }
 
 .date-separator {
