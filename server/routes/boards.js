@@ -110,10 +110,26 @@ router.post("/", async (req, res) => {
         const { title, description, userId, deadline, progress, status, template, organization } = req.body;
         const { TEMPLATES } = require("../config/templates");
 
-        // Validation
+        // Input sanitization and validation
         if (!title || !userId) {
             return res.status(400).json({
                 message: "Title and User ID are required"
+            });
+        }
+
+        // Sanitize title - trim and limit length
+        const sanitizedTitle = title.trim().substring(0, 255);
+        if (sanitizedTitle.length === 0) {
+            return res.status(400).json({
+                message: "Title cannot be empty"
+            });
+        }
+
+        // Validate userId is a number
+        const userIdNum = Number(userId);
+        if (isNaN(userIdNum) || userIdNum <= 0) {
+            return res.status(400).json({
+                message: "Invalid User ID"
             });
         }
 
@@ -123,18 +139,19 @@ router.post("/", async (req, res) => {
             });
         }
 
+
         const board = await prisma.board.create({
             data: {
-                title,
-                description,
-                organization,
+                title: sanitizedTitle,
+                description: description?.trim() || "",
+                organization: organization?.trim() || "",
                 deadline: deadline ? new Date(deadline) : null,
-                progress: progress ?? 0,
+                progress: Math.min(Math.max(progress ?? 0, 0), 100), // Clamp between 0-100
                 status: status || "Not Started",
                 template: template || "Table",
-                createdBy: Number(userId),
+                createdBy: userIdNum,
                 members: {
-                    create: { userId: Number(userId), role: "owner" },
+                    create: { userId: userIdNum, role: "owner" },
                 },
             },
         });
@@ -145,7 +162,7 @@ router.post("/", async (req, res) => {
                 action: "CREATE_BOARD",
                 message: `Created board "${board.title}" using ${template || "default"} template`,
                 boardId: board.id,
-                userId: Number(userId)
+                userId: userIdNum
             }
         });
 
