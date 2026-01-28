@@ -1,3 +1,4 @@
+/* ==================== LAYOUT ==================== */
 .projects-container {
   display: flex;
   width: 100%;
@@ -18,6 +19,7 @@
   background: #fff;
 }
 
+/* ==================== HEADER ==================== */
 .projects-header-new {
   display: flex;
   justify-content: space-between;
@@ -29,6 +31,7 @@
   margin-top: 10px;
 }
 
+/* ==================== CREATE CARD ==================== */
 .create-card {
   width: 350px;
   height: 160px;
@@ -49,6 +52,7 @@
   background: #e5ffff;
 }
 
+/* ==================== DROPDOWN ==================== */
 .create-dropdown {
   position: absolute;
   background: #fff;
@@ -168,6 +172,7 @@
   z-index: 2000;
 }
 
+/* ==================== MODAL ==================== */
 .modal-box {
   width: 420px;
   background: white;
@@ -275,6 +280,8 @@
 }
 
 /* Dark Mode Overrides */
+
+/* ==================== DARK MODE ==================== */
 body.dark-mode .projects-main {
   background: var(--bg-primary);
   color: var(--text-primary);
