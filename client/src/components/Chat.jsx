@@ -399,10 +399,10 @@ const Chat = () => {
                                                     {msg.attachmentUrl && (
                                                         <div className="chat-attachment">
                                                             {typeof msg.fileType === 'string' && msg.fileType.startsWith("image/") ? (
-                                                                <img 
-                                                                    src={msg.attachmentUrl} 
-                                                                    alt="attachment" 
-                                                                    className="chat-image-preview" 
+                                                                <img
+                                                                    src={msg.attachmentUrl}
+                                                                    alt="attachment"
+                                                                    className="chat-image-preview"
                                                                     style={{ maxWidth: "200px", borderRadius: "8px", marginBottom: "5px" }}
                                                                     onLoad={() => messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })}
                                                                 />
@@ -446,8 +446,21 @@ const Chat = () => {
                             />
                             <button type="button" className="icon-btn"><Smile size={20} /></button>
                         </form>
-                        <button className="send-btn" onClick={handleSendMessage}>
-                            {newMessage.trim() ? <Send size={18} /> : <Mic size={20} />}
+                        <button className="send-btn" onClick={handleSendMessage} aria-label="Send message">
+                            <svg
+                                width="20"
+                                height="20"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                style={{ transform: "translateX(-1px)" }}
+                            >
+                                <line x1="22" y1="2" x2="11" y2="13"></line>
+                                <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                            </svg>
                         </button>
                     </div>
                 </div>
