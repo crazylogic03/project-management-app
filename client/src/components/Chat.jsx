@@ -399,10 +399,10 @@ const Chat = () => {
                                                     {msg.attachmentUrl && (
                                                         <div className="chat-attachment">
                                                             {typeof msg.fileType === 'string' && msg.fileType.startsWith("image/") ? (
-                                                                <img 
-                                                                    src={msg.attachmentUrl} 
-                                                                    alt="attachment" 
-                                                                    className="chat-image-preview" 
+                                                                <img
+                                                                    src={msg.attachmentUrl}
+                                                                    alt="attachment"
+                                                                    className="chat-image-preview"
                                                                     style={{ maxWidth: "200px", borderRadius: "8px", marginBottom: "5px" }}
                                                                     onLoad={() => messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })}
                                                                 />
@@ -447,7 +447,7 @@ const Chat = () => {
                             <button type="button" className="icon-btn"><Smile size={20} /></button>
                         </form>
                         <button className="send-btn" onClick={handleSendMessage}>
-                            {newMessage.trim() ? <Send size={18} /> : <Mic size={20} />}
+                            <Send size={20} />
                         </button>
                     </div>
                 </div>
