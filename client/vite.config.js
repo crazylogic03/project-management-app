@@ -7,13 +7,15 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'https://project-management-app-89n4.onrender.com/',
+        target: 'http://localhost:3000',
         changeOrigin: true,
         secure: false,
       },
       '/socket.io': {
-        target: 'https://project-management-app-89n4.onrender.com/',
+        target: 'http://localhost:3000',
         ws: true,
+        changeOrigin: true,
+        secure: false,
       },
     },
   },
