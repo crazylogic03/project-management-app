@@ -326,7 +326,7 @@
     position: relative;
     max-width: 100%;
     word-wrap: break-word;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
 .other .chat-bubble {
@@ -359,7 +359,7 @@
     display: flex;
     align-items: center;
     gap: 16px;
-    box-shadow: 0 -4px 20px rgba(0,0,0,0.02);
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.02);
 }
 
 .chat-input-form {
@@ -465,4 +465,88 @@
 
 .chat-dropdown-item.danger {
     color: #d32f2f;
+}
+
+/* DARK MODE OVERRIDES */
+body.dark-mode .chat-layout,
+body.dark-mode .chat-sidebar {
+    background-color: var(--bg-primary);
+    border-color: var(--border-color);
+}
+
+body.dark-mode .chat-sidebar-header h2,
+body.dark-mode .chat-item-name,
+body.dark-mode .chat-header-info h3,
+body.dark-mode .chat-input-form input {
+    color: var(--text-primary);
+}
+
+body.dark-mode .chat-search input {
+    background-color: var(--bg-secondary);
+    border-color: var(--border-color);
+    color: var(--text-primary);
+}
+
+body.dark-mode .chat-list-section h3,
+body.dark-mode .chat-item-time,
+body.dark-mode .chat-item-preview,
+body.dark-mode .sender-name,
+body.dark-mode .chat-time {
+    color: var(--text-secondary);
+}
+
+body.dark-mode .chat-item:hover,
+body.dark-mode .chat-item.active {
+    background-color: var(--bg-secondary);
+}
+
+body.dark-mode .chat-main {
+    background-color: var(--bg-primary);
+}
+
+body.dark-mode .chat-main-header,
+body.dark-mode .chat-input-wrapper {
+    background-color: var(--bg-primary);
+    /* or bg-secondary if you want contrast */
+    border-color: var(--border-color);
+}
+
+body.dark-mode .date-separator span {
+    background-color: var(--bg-secondary);
+    color: var(--text-secondary);
+}
+
+body.dark-mode .other .chat-bubble {
+    background-color: var(--card-bg);
+    /* darker bubble */
+    border-color: var(--border-color);
+    color: var(--text-primary);
+}
+
+body.dark-mode .chat-input-form {
+    background-color: var(--bg-secondary);
+    border-color: var(--border-color);
+}
+
+body.dark-mode .chat-dropdown-menu {
+    background-color: var(--card-bg);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+body.dark-mode .chat-dropdown-item {
+    color: var(--text-primary);
+}
+
+body.dark-mode .chat-dropdown-item:hover {
+    background-color: var(--bg-secondary);
+}
+
+body.dark-mode .chat-item-avatar,
+body.dark-mode .chat-bubble-avatar {
+    background-color: var(--bg-secondary);
+    color: var(--text-secondary);
+}
+
+body.dark-mode .status-dot {
+    border-color: var(--bg-primary);
 }
