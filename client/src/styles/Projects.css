@@ -188,6 +188,14 @@
   padding: 10px 20px;
   border-radius: 8px;
   color: white;
+  border: none;
+  cursor: pointer;
+  outline: none;
+  transition: 0.2s ease;
+}
+
+.cancel-btn:hover {
+  background: #9a9a9a;
 }
 
 .create-btn-modal {
@@ -195,8 +203,14 @@
   padding: 10px 20px;
   border-radius: 8px;
   color: white;
+  border: none;
+  cursor: pointer;
+  outline: none;
+  transition: 0.2s ease;
+}
 
-
+.create-btn-modal:hover {
+  background: #027a7a;
 }
 
 /* Dark Mode Overrides */
