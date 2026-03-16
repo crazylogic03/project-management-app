@@ -224,12 +224,12 @@ const Projects = () => {
             className="create-dropdown"
             style={{ top: dropdownPos.top, left: dropdownPos.left, position: "absolute" }}
           >
-            <div className="dropdown-item" onClick={() => openCreateModal("Todo Template")}>📝 Todo Template</div>
-            <div className="dropdown-item" onClick={() => openCreateModal("Project Template")}>🚀 Project Template</div>
-            <div className="dropdown-item" onClick={() => openCreateModal("Table")}>📊 Table</div>
-            <div className="dropdown-item" onClick={() => openCreateModal("Agile Sprint")}>⚡ Agile Sprint</div>
-            <div className="dropdown-item" onClick={() => openCreateModal("Bug Tracking")}>🐛 Bug Tracking</div>
-            <div className="dropdown-item" onClick={() => openCreateModal("Marketing Campaign")}>📢 Marketing Campaign</div>
+            <div className="dropdown-item" onClick={() => openCreateModal("Todo Template")}>Todo Template</div>
+            <div className="dropdown-item" onClick={() => openCreateModal("Project Template")}>Project Template</div>
+            <div className="dropdown-item" onClick={() => openCreateModal("Table")}>Table</div>
+            <div className="dropdown-item" onClick={() => openCreateModal("Agile Sprint")}>Agile Sprint</div>
+            <div className="dropdown-item" onClick={() => openCreateModal("Bug Tracking")}>Bug Tracking</div>
+            <div className="dropdown-item" onClick={() => openCreateModal("Marketing Campaign")}>Marketing Campaign</div>
           </div>
         )}
 
