@@ -7,6 +7,7 @@ import image from "../assets/image2.png";
 const SignInPage = () => {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+  const [isGoogleLoading, setIsGoogleLoading] = useState(false);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -37,7 +38,30 @@ const SignInPage = () => {
     }
   };
 
-  const handleGoogleLogin = () => {
+  const handleGoogleLogin = async () => {
+    setIsGoogleLoading(true);
+    let attempts = 0;
+    let isAwake = false;
+
+    // Ping the backend until it's awake to avoid Render's sleeping page overlay
+    while (!isAwake && attempts < 30) {
+      try {
+        const res = await fetch("https://project-management-app-89n4.onrender.com/api/users/search?query=wake");
+        if (res.ok) {
+          const contentType = res.headers.get("content-type");
+          if (contentType && contentType.includes("application/json")) {
+            isAwake = true;
+            break;
+          }
+        }
+      } catch (error) {
+        // Will fail due to CORS or network when Render shows the sleeping HTML page
+      }
+      attempts++;
+      await new Promise(resolve => setTimeout(resolve, 2000));
+    }
+
+    setIsGoogleLoading(false);
     window.open("https://project-management-app-89n4.onrender.com/api/users/google", "_self");
   };
 
@@ -85,13 +109,20 @@ const SignInPage = () => {
             type="button"
             className="google-btn"
             onClick={handleGoogleLogin}
+            disabled={isGoogleLoading}
           >
-            <img
-              src="https://www.svgrepo.com/show/475656/google-color.svg"
-              alt="google"
-              style={{ width: 20, height: 20 }}
-            />
-            Sign in with Google
+            {isGoogleLoading ? (
+              "Waking up server... (this may take a minute)"
+            ) : (
+              <>
+                <img
+                  src="https://www.svgrepo.com/show/475656/google-color.svg"
+                  alt="google"
+                  style={{ width: 20, height: 20 }}
+                />
+                Sign in with Google
+              </>
+            )}
           </button>
         </form>
 
